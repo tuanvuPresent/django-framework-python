@@ -1,0 +1,65 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+</head>
+
+<div class="custom-table">
+    <table id="table">
+        <thead>
+        <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <th>Column 3</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<style>
+    .table-user {
+        height: 500px;
+        width: 50%;
+        overflow: auto;
+    }
+
+    table {
+        border-collapse: collapse;
+        overflow: auto;
+        width: 100%;
+    }
+
+    table, th, td {
+        border: 1px solid #868585;
+        padding: 10px;
+    }
+
+    table tr:nth-child(odd) {
+        background-color: #eee;
+    }
+
+    table tr:nth-child(even) {
+        background-color: white;
+    }
+
+    table tr:nth-child(1) {
+        background-color: skyblue;
+    }
+</style>
+<script>
+    function setDataTable(data){
+        $("#table").DataTable({
+            data: data,
+            columns: [
+                    { "data": "column1" ,"defaultContent": ''},
+                    { "data": "column2" ,"defaultContent": ''},
+                    { "data": "column3" ,"defaultContent": ''},
+                ],
+            bDestroy: true,
+            order: [[ 2, "desc" ]]
+            });
+    }
+</script>
