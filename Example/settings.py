@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'apps.demo_firebase',
     'apps.chatbot',
     'apps.my_phone_verify',
+    'apps.fcm_notify',
 
     'rest_framework.authtoken',
     'silk',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'social_django',
+    'fcm_django',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -308,4 +310,11 @@ JWT_AUTH = {
 
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_AUTH_COOKIE': 'JWT',
+}
+
+FCM_DJANGO_SETTINGS = {
+    "APP_VERBOSE_NAME": "test",
+    "FCM_SERVER_KEY": env_config('FCM_SERVER_KEY'),
+    "ONE_DEVICE_PER_USER": True,
+    "DELETE_INACTIVE_DEVICES": True,
 }

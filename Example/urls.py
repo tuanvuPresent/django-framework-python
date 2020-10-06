@@ -48,5 +48,6 @@ urlpatterns = [
     url('api/', include('apps.authentication_jwt.urls')),
     url('api/', include('apps.book.urls')),
     url('api/', include('apps.my_phone_verify.urls')),
+    url('api/', include('apps.fcm_notify.urls')),
     url(r'^silk/', include('silk.urls', namespace='silk'))
 ]
