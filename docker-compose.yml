@@ -35,11 +35,13 @@ services:
     restart: always
     depends_on:
       - db
+    volumes:
+      - .:/usr/src/app
 
-  redis:
-    restart: always
-    image: "redis:alpine"
-    command: redis-server
+#  redis:
+#    restart: always
+#    image: "redis:alpine"
+#    command: redis-server
 
   rabbitmq:
     restart: always
@@ -52,7 +54,7 @@ services:
     build: .
     command: celery -A Example worker -l info
     depends_on:
-      - redis
+      - rabbitmq
       - db
 
   celery-beat:
@@ -60,7 +62,7 @@ services:
     build: .
     command: celery -A Example beat -l info -S django
     depends_on:
-      - redis
+      - rabbitmq
       - db
 
 #

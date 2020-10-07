@@ -8,5 +8,6 @@ db.sqlite3
 **/venv/
 **/.env
 mediafiles/
+staticfiles/
 **/debug.log
 **/celerybeat-schedule

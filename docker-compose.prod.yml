@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3'
 
 services:
   db:
@@ -31,6 +31,7 @@ services:
     volumes:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
+      - .:/usr/src/app
     expose:
       - 8011
     restart: always
@@ -46,6 +47,28 @@ services:
       - 1221:80
     depends_on:
       - web
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+
+  celery:
+    restart: always
+    build: .
+    command: celery -A Example worker -l info
+    depends_on:
+      - rabbitmq
+      - db
+
+  celery-beat:
+    restart: always
+    build: .
+    command: celery -A Example beat -l info -S django
+    depends_on:
+      - rabbitmq
+      - db
 
 volumes:
   static_volume:
