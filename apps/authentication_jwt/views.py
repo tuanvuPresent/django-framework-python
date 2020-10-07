@@ -12,7 +12,7 @@ from social_django.utils import load_strategy, load_backend
 
 from apps.authentication_jwt.models import RevokedToken
 from apps.authentication_jwt.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
-    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer
+    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer
 from apps.authentication_jwt.utils import jwt_payload_handler, jwt_encode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
@@ -22,6 +22,7 @@ from apps.common.custom_model_view_set import BaseGenericViewSet
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
         'login': JWTLoginSerializer,
+        'admin_login': JWTAdminLoginSerializer,
         'refresh_token': JWTRefreshTokenSerializer,
         'change_password': JWTPasswordChangeSerializer,
         'reset_password': JWTPasswordResetSerializer,
@@ -61,6 +62,11 @@ class JWTAuthAPIView(BaseGenericViewSet):
                                 expires=expiration,
                                 httponly=True)
         return response
+
+    @swagger_auto_schema(request_body=JWTAdminLoginSerializer)
+    @action(methods=['post'], detail=False, authentication_classes=[], url_path='admin/login')
+    def admin_login(self, request):
+        return self.login(request)
 
     @swagger_auto_schema(request_body=JWTRefreshTokenSerializer)
     @action(methods=['post'], detail=False)
