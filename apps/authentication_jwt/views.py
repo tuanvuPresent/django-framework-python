@@ -38,7 +38,9 @@ class JWTAuthAPIView(BaseGenericViewSet):
                 auth = auth[1]
             token = auth
             RevokedToken.objects.create(token=token)
-        return Response(data=None)
+        response = Response(data=None)
+        response.delete_cookie(api_settings.JWT_AUTH_COOKIE)
+        return response
 
     @swagger_auto_schema(request_body=JWTLoginSerializer)
     @action(methods=['post'], detail=False, authentication_classes=[])
@@ -64,7 +66,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
         return response
 
     @swagger_auto_schema(request_body=JWTAdminLoginSerializer)
-    @action(methods=['post'], detail=False, authentication_classes=[], url_path='admin/login')
+    @action(methods=['post'], detail=False, authentication_classes=[], url_path='admin-login')
     def admin_login(self, request):
         return self.login(request)
 
