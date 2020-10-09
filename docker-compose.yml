@@ -38,11 +38,6 @@ services:
     volumes:
       - .:/usr/src/app
 
-#  redis:
-#    restart: always
-#    image: "redis:alpine"
-#    command: redis-server
-
   rabbitmq:
     restart: always
     image: rabbitmq:latest
@@ -56,6 +51,8 @@ services:
     depends_on:
       - rabbitmq
       - db
+    volumes:
+      - .:/usr/src/app
 
   celery-beat:
     restart: always
@@ -64,8 +61,25 @@ services:
     depends_on:
       - rabbitmq
       - db
+    volumes:
+      - .:/usr/src/app
 
-#
+  flower:
+    build: .
+    command: celery flower -A Example --broker=amqp://rabbitmq:5672//
+    ports:
+      - 5555:5555
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - db
+
+#  redis:
+#    restart: always
+#    image: "redis:alpine"
+#    command: redis-server
+
 ##  postgres:
 ##    container_name: postgres_example
 ##    image: postgres

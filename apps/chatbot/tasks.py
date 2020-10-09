@@ -12,7 +12,4 @@ def scheduled_send_chatwork():
 
 @app.task()
 def test():
-    now = datetime.now()
-    f = open("schedule_test.txt", "a")
-    f.write('\n' + str(now))
-    f.close()
+    print('test')

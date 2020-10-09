@@ -61,11 +61,26 @@ services:
     depends_on:
       - rabbitmq
       - db
+    volumes:
+      - .:/usr/src/app
 
   celery-beat:
     restart: always
     build: .
     command: celery -A Example beat -l info -S django
+    depends_on:
+      - rabbitmq
+      - db
+    volumes:
+      - .:/usr/src/app
+
+  flower:
+    build: .
+    command: celery flower -A Example --broker=amqp://rabbitmq:5672//
+    ports:
+      - 5555:5555
+    volumes:
+      - .:/usr/src/app
     depends_on:
       - rabbitmq
       - db
