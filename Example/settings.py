@@ -24,8 +24,7 @@ env_config = Config(RepositoryEnv(ENV_FILE))
 SECRET_KEY = 'a5aj@zcwqzqkf1kc^p*xkevbzk(#y8231*w5hbcq=k#t8qu^ha'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_config("DEBUG", True),
-
+DEBUG = env_config("DEBUG", cast=bool)
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -215,7 +214,7 @@ EMAIL_BACKEND = env_config('EMAIL_BACKEND')
 EMAIL_PORT = env_config('EMAIL_PORT')
 EMAIL_HOST_USER = env_config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env_config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = env_config('EMAIL_USE_TLS')
+EMAIL_USE_TLS = env_config('EMAIL_USE_TLS', cast=bool)
 
 FORMAT_DATE = '%Y/%m/%d'
 FORMAT_DATETIME = '%Y/%m/%d %X'
@@ -272,7 +271,6 @@ CELERY_RESULT_BACKEND = 'amqp://rabbitmq:5672//'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env_config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env_config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')

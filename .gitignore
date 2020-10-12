@@ -11,3 +11,4 @@ mediafiles/
 staticfiles/
 **/debug.log
 **/celerybeat-schedule
+**/celerybeat.pid
