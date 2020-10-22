@@ -33,3 +33,4 @@ django-phonenumber-field==5.0.0
 phonenumbers==8.12.9
 fcm-django==0.3.4
 flower
+whitenoise~=5.2.0
