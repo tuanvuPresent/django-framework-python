@@ -15,7 +15,7 @@ import os
 from decouple import Config, RepositoryEnv, config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENV_FILE = os.path.join(BASE_DIR, '.env')
+ENV_FILE = os.path.join(BASE_DIR, '.env.example')
 env_config = Config(RepositoryEnv(ENV_FILE))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
