@@ -12,3 +12,4 @@ staticfiles/
 **/debug.log
 **/celerybeat-schedule
 **/celerybeat.pid
+**/logs

@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'social_django',
     'fcm_django',
+    'log_viewer',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -221,34 +222,6 @@ FORMAT_DATETIME = '%Y/%m/%d %X'
 
 X_CHATWORKTOKEN = env_config('X_CHATWORKTOKEN')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d}: {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
-        },
-    }
-}
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -315,4 +288,78 @@ FCM_DJANGO_SETTINGS = {
     "FCM_SERVER_KEY": env_config('FCM_SERVER_KEY'),
     "ONE_DEVICE_PER_USER": True,
     "DELETE_INACTIVE_DEVICES": True,
+}
+
+LOG_VIEWER_FILES = ['debug.log']
+LOG_VIEWER_FILES_PATTERN = '*.log'
+LOG_VIEWER_FILES_DIR = os.path.join(BASE_DIR, 'logs')
+LOG_VIEWER_MAX_READ_LINES = 1000  # total log lines will be read
+LOG_VIEWER_PAGE_LENGTH = 25  # total log lines per-page
+LOG_VIEWER_PATTERNS = [']OFNI[', ']GUBED[', ']GNINRAW[', ']RORRE[', ']LACITIRC[']
+
+# Optionally you can set the next variables in order to customize the admin:
+
+LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
+LOG_VIEWER_FILE_LIST_STYLES = "/static/css/my-custom.css"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '[%(levelname)s] %(asctime)s %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/debug.log',
+            'formatter': 'standard'
+        },
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/default.log',
+            'formatter': 'standard',
+        },
+        'request_debug_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/request_debug.log',
+            'formatter': 'standard',
+        },
+        'request_error_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/request_error.log',
+            'formatter': 'standard',
+        },
+        'mail_admins_handler': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'email_backend': 'django.core.mail.backends.smtp.EmailBackend'
+        },
+    },
+    'root': {
+        'handlers': ['default'],
+        'level': 'DEBUG'
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': [
+                'default',
+                'request_debug_handler',
+                'request_error_handler',
+                'mail_admins_handler'
+            ],
+            'propagate': False
+        },
+        'django': {
+            'handlers': [
+                'console',
+            ],
+            'propagate': False
+        },
+    }
 }
