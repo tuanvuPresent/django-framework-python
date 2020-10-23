@@ -107,35 +107,42 @@ WSGI_APPLICATION = 'Example.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# config data-base postgres
-# DATABASES = {
-#     "default": {
-#         "ENGINE": env_config("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
-#         "NAME": env_config("POSTGRES_DB", os.path.join(BASE_DIR, "db.sqlite3")),
-#         "USER": env_config("POSTGRES_USER", "admin"),
-#         "PASSWORD": env_config("POSTGRES_PASSWORD", "admin"),
-#         "HOST": env_config("POSTGRES_HOST", "localhost"),
-#         "PORT": env_config("POSTGRES_PORT", "5432"),
-#     }
-# }
-
-# config data-base mysql
-DATABASES = {
-    'default': {
-        'ENGINE': env_config("MY_SQL_ENGINE", "django.db.backends.sqlite3"),
-        'NAME': env_config("MYSQL_DATABASE", "db"),
-        'USER': env_config("MYSQL_USER", "admin"),
-        'PASSWORD': env_config("MYSQL_PASSWORD", "admin"),
-        'HOST': env_config("MY_SQL_HOST", "127.0.0.1"),
-        'PORT': env_config("MYSQL_PORT", "3306"),
-        # 'OPTIONS': {
-        #     'init_command':
-        #         'ALTER DATABASE {} CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs'.format(
-        #             env_config("MYSQL_DATABASE", "db"))
-        # }
+if env_config('DATABASES_NAME', 'None').lower() == 'postgres':
+    # config data-base postgres
+    DATABASES = {
+        "default": {
+            "ENGINE": env_config("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": env_config("POSTGRES_DB", os.path.join(BASE_DIR, "db.sqlite3")),
+            "USER": env_config("POSTGRES_USER", "admin"),
+            "PASSWORD": env_config("POSTGRES_PASSWORD", "admin"),
+            "HOST": env_config("POSTGRES_HOST", "localhost"),
+            "PORT": env_config("POSTGRES_PORT", "5432"),
+        }
     }
-}
+elif env_config('DATABASES_NAME', 'None').lower() == 'mysql':
+    # config data-base mysql
+    DATABASES = {
+        'default': {
+            'ENGINE': env_config("MY_SQL_ENGINE", "django.db.backends.sqlite3"),
+            'NAME': env_config("MYSQL_DATABASE", "db"),
+            'USER': env_config("MYSQL_USER", "admin"),
+            'PASSWORD': env_config("MYSQL_PASSWORD", "admin"),
+            'HOST': env_config("MY_SQL_HOST", "127.0.0.1"),
+            'PORT': env_config("MYSQL_PORT", "3306"),
+            # 'OPTIONS': {
+            #     'init_command':
+            #         'ALTER DATABASE {} CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs'.format(
+            #             env_config("MYSQL_DATABASE", "db"))
+            # }
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
