@@ -34,3 +34,4 @@ phonenumbers==8.12.9
 fcm-django==0.3.4
 flower==0.9.5
 django-log-viewer==1.1.1
+graphene~=2.1.8
