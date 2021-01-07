@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'social_django',
     'fcm_django',
     'log_viewer',
+    'graphene_django',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -228,7 +229,6 @@ FORMAT_DATE = '%Y/%m/%d'
 FORMAT_DATETIME = '%Y/%m/%d %X'
 
 X_CHATWORKTOKEN = env_config('X_CHATWORKTOKEN')
-
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
