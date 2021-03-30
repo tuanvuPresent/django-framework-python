@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from apps.account.models import User
-from apps.common.constant import Error
+from apps.common.constant import ErrorCode
 from apps.common.custom_exception_handler import CustomAPIException
 # Create your views here.
 from apps.common.custom_model_view_set import BaseGenericViewSet
@@ -81,7 +81,7 @@ class ImportAPIView(BaseGenericViewSet):
         try:
             wb = openpyxl.load_workbook(excel_file)
         except BadZipFile:
-            raise CustomAPIException(**Error.FORMAT_FILE)
+            raise CustomAPIException(**ErrorCode.FORMAT_FILE)
 
         excel_data = list()
         for worksheet in wb:

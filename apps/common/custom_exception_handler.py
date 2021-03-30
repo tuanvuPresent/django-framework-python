@@ -1,33 +1,51 @@
+import logging
+
 from rest_framework.exceptions import APIException, ErrorDetail
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
+from apps.common.constant import ErrorCode, Error
+
 
 def custom_exception_handler(exc, context):
+    logger = logging.getLogger(str(context['view']))
     response = exception_handler(exc, context)
     exc_class = exc.__class__.__name__
     if response is not None:
-        if exc_class == 'ValidationError':
-            detail = response.data
-            messenger = get_full_errors_messages(detail)
-
-            errors = get_errors_code(detail)
-            print(errors)
-
-        else:
-            messenger = response.data.get('detail')
-
-        error_code = response.status_code
         status_code = response.status_code
+        detail = None
+        if exc_class == 'ValidationError':
+            error = ErrorCode.UNKNOWN_ERROR
+            detail = get_full_errors_messages(response.data)
+        elif exc_class == "CustomAPIException":
+            error = exc.detail
+        elif exc_class == "AuthenticationFailed":
+            error = ErrorCode.INVALID_AUTH
+        elif exc_class == "NotAuthenticated":
+            error = ErrorCode.NOT_AUTH
+        elif exc_class == "PermissionDenied":
+            error = ErrorCode.NOT_PERMISSION
+        elif exc_class == "Throttled":
+            error = ErrorCode.THROTTLED_REQUEST
+        elif exc_class == "Http404":
+            error = ErrorCode.NOT_FOUND
+        elif exc_class == "MethodNotAllowed":
+            error = ErrorCode.NOT_ALLOW_METHOD
+        else:
+            error = ErrorCode.UNKNOWN_ERROR
+            detail = str(exc)
+
     else:
-        error_code = 500
-        messenger = str(exc)
+        detail = str(exc)
+        error = ErrorCode.UNKNOWN_ERROR
         status_code = 500
 
+        logger.error(exc)
     return Response({
         'status': False,
-        'errorCode': error_code,
-        'messenger': messenger
+        'messenger': error[Error.message],
+        'code': error[Error.code],
+        'detail': detail
     }, status=status_code)
 
 
