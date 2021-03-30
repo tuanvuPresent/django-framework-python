@@ -12,7 +12,9 @@ step 2: Build code with docker compose
 docker-compose up --build
 ```
 
-step 3: Run
+step 3: Create folder logs tại root project
+
+step 4: Run
 ```
 - run server 0.0.0.0:8888
 
