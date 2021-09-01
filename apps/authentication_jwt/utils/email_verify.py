@@ -2,7 +2,8 @@ import random
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.utils.http import base36_to_int
+from django.utils.encoding import force_bytes
+from django.utils.http import base36_to_int, urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.crypto import constant_time_compare
 
 from apps.account.models import User
@@ -33,10 +34,13 @@ class CustomEmailVerifyTokenGenerator:
             return False, None
         return True, user
 
-    def make_code(self):
+    def make_code(self, user):
         token_length = settings.RESET_PASSWORD_CODE_LENGTH or self.RESET_PASSWORD_CODE_LENGTH
         allowed_chars = 'abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        return "".join(random.sample(allowed_chars, token_length))
+        code = "".join(random.sample(allowed_chars, token_length))
+        ResetPasswordReferent.objects.filter(user_id=user).delete()
+        ResetPasswordReferent.objects.create(user_id=user, code=code)
+        return code
 
     def check_code(self, user, code):
         reset_password_ref = ResetPasswordReferent.objects.filter(user_id=user, is_active=True).first()
@@ -54,6 +58,13 @@ class CustomEmailVerifyTokenGenerator:
 
 
 class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
+    key_salt = "django.contrib.auth.tokens.PasswordResetTokenGenerator"
+    algorithm = None
+    secret = settings.SECRET_KEY
+
+    def _make_hash_value(self, user, timestamp):
+        login_timestamp = '' if user.last_login is None else user.last_login.replace(microsecond=0, tzinfo=None)
+        return str(user.pk) + user.password + str(login_timestamp) + str(timestamp)
 
     def make_token(self, user):
         return self._make_token_with_timestamp(user, self._num_seconds(self._now()))
@@ -85,7 +96,10 @@ class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
         return True
 
     def make_uid(self, user):
-        return 1
+        return urlsafe_base64_encode(force_bytes(user.pk))
 
     def decode_uid(self, uid):
-        return 1
+        try:
+            return urlsafe_base64_decode(uid).decode()
+        except:
+            return None

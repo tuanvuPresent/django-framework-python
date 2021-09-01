@@ -7,7 +7,6 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
-from .models import ResetPasswordReferent
 from .utils.email_verify import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
 from .utils.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
 from .utils.send_mail_handle import send_mail_reset_password, send_mail_reset_password_v2, send_mail_reset_password_v3
@@ -158,11 +157,9 @@ class ResetPasswordSerializer2(serializers.Serializer):
         if not user:
             raise CustomAPIException(ErrorCode.EMAIL_NOT_EXIST)
 
-        code = token_generator.make_code()
-        ResetPasswordReferent.objects.filter(user_id=user).delete()
-        ResetPasswordReferent.objects.create(user_id=user, code=code)
-        send_mail_reset_password_v2.delay(to_email=email, code=code)
+        code = token_generator.make_code(user)
         token = token_generator.make_token(user)
+        send_mail_reset_password_v2.delay(to_email=email, code=code)
         return token
 
 
@@ -237,4 +234,5 @@ class ResetPasswordCompleteSerializer3(CheckResetPasswordSerializer3):
 
         user = attrs.get('user')
         user.set_password(new_password)
+        user.save()
         return attrs
