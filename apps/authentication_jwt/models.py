@@ -11,6 +11,6 @@ class RevokedToken(BaseModel):
 
 class ResetPasswordReferent(models.Model):
     user_id = models.OneToOneField(User, models.DO_NOTHING, default=None)
-    code = models.CharField(max_length=16)
+    code = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     is_active = models.BooleanField(default=True)

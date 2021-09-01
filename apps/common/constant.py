@@ -110,3 +110,21 @@ class ErrorCode:
             Language.VI: 'Email không tồn tại',
         }
     }
+    LINK_RESET_PASS_INVALID = {
+        Error.code: 1016,
+        Error.message: {
+            Language.VI: 'Đường dẫn không hợp lệ hoặc đã hết hạn',
+        }
+    }
+    TOKEN_REQUIRED = {
+        Error.code: 1017,
+        Error.message: {
+            Language.VI: 'Mã khôi phục không được để trống',
+        }
+    }
+    UID_REQUIRED = {
+        Error.code: 1018,
+        Error.message: {
+            Language.VI: 'Mã ngưởi dùng không được để trống',
+        }
+    }

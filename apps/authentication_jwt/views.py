@@ -13,7 +13,8 @@ from social_django.utils import load_strategy, load_backend
 from apps.authentication_jwt.models import RevokedToken
 from apps.authentication_jwt.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
     JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer, \
-    ResetPasswordCompleteSerializer, ResetPasswordSerializer2
+    ResetPasswordCompleteSerializer, ResetPasswordSerializer2, ResetPasswordSerializer3, \
+    ResetPasswordCompleteSerializer3, CheckResetPasswordSerializer3
 from apps.authentication_jwt.utils.jwt_handle import jwt_payload_handler, jwt_encode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
@@ -29,6 +30,9 @@ class JWTAuthAPIView(BaseGenericViewSet):
         'reset_password': JWTPasswordResetSerializer,
         'reset_password_v2': ResetPasswordSerializer2,
         'reset_password_complete_v2': ResetPasswordCompleteSerializer,
+        'reset_password_v3': ResetPasswordSerializer3,
+        'reset_password_confirm_v3': CheckResetPasswordSerializer3,
+        'reset_password_complete_v3': ResetPasswordCompleteSerializer3,
     }
 
     @action(methods=['get'], detail=False)
@@ -133,12 +137,25 @@ class JWTAuthAPIView(BaseGenericViewSet):
         return Response(data='success')
 
     @action(methods=['post'], detail=False, url_path='reset-pass-3', authentication_classes=[])
+    @swagger_auto_schema(request_body=ResetPasswordSerializer3)
     def reset_password_v3(self, request):
-        return Response(data='success')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        return Response()
+
+    @action(methods=['post'], detail=False, url_path='reset-pass-confirm-3', authentication_classes=[])
+    @swagger_auto_schema(request_body=CheckResetPasswordSerializer3)
+    def reset_password_confirm_v3(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        return Response()
 
     @action(methods=['post'], detail=False, url_path='reset-pass-complete-3', authentication_classes=[])
+    @swagger_auto_schema(request_body=ResetPasswordCompleteSerializer3)
     def reset_password_complete_v3(self, request):
-        return Response(data='success')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        return Response()
 
 
 class AuthSocialView(BaseGenericViewSet):
