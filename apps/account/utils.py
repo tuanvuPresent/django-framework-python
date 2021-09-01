@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from jwt import ExpiredSignatureError, DecodeError
 
 from apps.account.models import User
-from apps.authentication_jwt.utils import jwt_encode_handler, jwt_decode_handler
+from apps.authentication_jwt.utils.utils import jwt_encode_handler, jwt_decode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 
 

@@ -12,8 +12,9 @@ from social_django.utils import load_strategy, load_backend
 
 from apps.authentication_jwt.models import RevokedToken
 from apps.authentication_jwt.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
-    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer
-from apps.authentication_jwt.utils import jwt_payload_handler, jwt_encode_handler
+    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer, \
+    ResetPasswordCompleteSerializer, ResetPasswordSerializer2
+from apps.authentication_jwt.utils.utils import jwt_payload_handler, jwt_encode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
@@ -26,6 +27,8 @@ class JWTAuthAPIView(BaseGenericViewSet):
         'refresh_token': JWTRefreshTokenSerializer,
         'change_password': JWTPasswordChangeSerializer,
         'reset_password': JWTPasswordResetSerializer,
+        'reset_password_v2': ResetPasswordSerializer2,
+        'reset_password_complete_v2': ResetPasswordCompleteSerializer,
     }
 
     @action(methods=['get'], detail=False)
@@ -71,7 +74,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
         return self.login(request)
 
     @swagger_auto_schema(request_body=JWTRefreshTokenSerializer)
-    @action(methods=['post'], detail=False)
+    @action(methods=['post'], detail=False, url_path='refresh-token')
     def refresh_token(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -93,7 +96,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
         return response
 
     @swagger_auto_schema(request_body=JWTPasswordChangeSerializer)
-    @action(methods=['post'], detail=False)
+    @action(methods=['post'], detail=False, url_path='change-password')
     def change_password(self, request):
         data = request.data
         serializer = self.get_serializer(data=data)
@@ -102,13 +105,40 @@ class JWTAuthAPIView(BaseGenericViewSet):
         return Response(data=None)
 
     @swagger_auto_schema(request_body=JWTPasswordResetSerializer)
-    @action(methods=['post'], detail=False, authentication_classes=[])
+    @action(methods=['post'], detail=False, authentication_classes=[], url_path='reset-pass-1')
     def reset_password(self, request):
         data = request.data
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data)
+
+    @action(methods=['post'], detail=False, url_path='reset-pass-2', authentication_classes=[])
+    @swagger_auto_schema(request_body=ResetPasswordSerializer2)
+    def reset_password_v2(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        token = serializer.validated_data
+        return Response(data={'token': token})
+
+    @action(methods=['post'], detail=False, url_path='reset-pass-complete-2', authentication_classes=[])
+    @swagger_auto_schema(request_body=ResetPasswordCompleteSerializer)
+    def reset_password_complete_v2(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        user = serializer.validated_data.get('user')
+        new_password = serializer.validated_data.get('new_password')
+        user.set_password(new_password)
+        user.save()
+        return Response(data='success')
+
+    @action(methods=['post'], detail=False, url_path='reset-pass-3', authentication_classes=[])
+    def reset_password_v3(self, request):
+        return Response(data='success')
+
+    @action(methods=['post'], detail=False, url_path='reset-pass-complete-3', authentication_classes=[])
+    def reset_password_complete_v3(self, request):
+        return Response(data='success')
 
 
 class AuthSocialView(BaseGenericViewSet):

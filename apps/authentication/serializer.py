@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
 from apps.account.models import User
-from apps.authentication_jwt.tasks import send_mail_reset_password
+from apps.authentication_jwt.utils.tasks import send_mail_reset_password
 from apps.common.custom_exception_handler import CustomAPIException
 
 

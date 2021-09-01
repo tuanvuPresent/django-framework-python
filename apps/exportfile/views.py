@@ -70,6 +70,18 @@ class ExportAPIView(GenericViewSet):
 
         return response
 
+    # @action(methods=['get'], detail=False, url_path='effort-xlsx')
+    # def export_xlsx(self, request):
+    #     data = {
+    #         'Column 1': [],
+    #         'Column 2': [],
+    #     }
+    #     file_name = 'effort.xlsx'
+    #     df = pd.DataFrame(data)
+    #     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    #     response['Content-Disposition'] = 'attachment; filename=""' + file_name
+    #     df.to_excel(response, index=False)
+    #     return response
 
 class ImportAPIView(BaseGenericViewSet):
     parser_classes = (MultiPartParser,)
@@ -116,6 +128,22 @@ class ImportAPIView(BaseGenericViewSet):
             data.append(res)
         return Response(data=data)
 
+    # @action(methods=['post'], detail=False, url_path='import-csv-xlsx', parser_classes=[MultiPartParser, ])
+    # @swagger_auto_schema(request_body=CVSFileSerializer)
+    # @transaction.atomic()
+    # def import_csv_or_xlsx(self, request):
+    #     file = request.FILES['file']
+    #     try:
+    #         if file.content_type == 'text/csv':
+    #             df = pd.read_csv(file)
+    #         else:
+    #             df = pd.read_excel(file)
+    #     except:
+    #         raise CustomAPIException()
+    #     row_iter = df.iterrows()
+    #     for index, row in row_iter:
+    #         pass
+    #     return Response()
 
 class ExportPdfAPIView(GenericViewSet):
     serializer_class = NoneSerializer

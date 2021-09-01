@@ -1,14 +1,12 @@
-import jwt
 from jwt import ExpiredSignatureError, DecodeError
 from rest_framework.authentication import get_authorization_header
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
-from Example.settings import SECRET_KEY
 from apps.account.models import User
 from apps.authentication_jwt.models import RevokedToken
-from apps.authentication_jwt.utils import jwt_decode_handler
+from apps.authentication_jwt.utils.jwt_handle import jwt_decode_handler
 
 
 class JWTAuthentication(JSONWebTokenAuthentication):

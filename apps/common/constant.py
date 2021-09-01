@@ -72,3 +72,41 @@ class ErrorCode:
             Language.EN: 'Incorrect format file',
         }
     }
+
+    RESET_PASSWORD_TOKEN_INVALID = {
+        Error.code: 1010,
+        Error.message: {
+            Language.VI: 'Mã khôi phục mật khẩu không hợp lệ',
+        }
+    }
+    RESET_PASSWORD_CODE_INVALID = {
+        Error.code: 1011,
+        Error.message: {
+            Language.VI: 'Mã khôi phục mật khẩu không hợp lệ',
+        }
+    }
+
+    EMAIL_REQUIRED = {
+        Error.code: 1012,
+        Error.message: {
+            Language.VI: 'Email nhân viên không được để trống',
+        }
+    }
+    PASSWORD_REQUIRED = {
+        Error.code: 1014,
+        Error.message: {
+            Language.VI: 'Mật khẩu không được để trống',
+        }
+    }
+    RESET_PASSWORD_CODE_REQUIRED = {
+        Error.code: 1015,
+        Error.message: {
+            Language.VI: 'Mã khôi phục không được để trống',
+        }
+    }
+    EMAIL_NOT_EXIST = {
+        Error.code: 1016,
+        Error.message: {
+            Language.VI: 'Email không tồn tại',
+        }
+    }
