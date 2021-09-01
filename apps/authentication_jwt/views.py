@@ -14,7 +14,7 @@ from apps.authentication_jwt.models import RevokedToken
 from apps.authentication_jwt.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
     JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer, \
     ResetPasswordCompleteSerializer, ResetPasswordSerializer2
-from apps.authentication_jwt.utils.utils import jwt_payload_handler, jwt_encode_handler
+from apps.authentication_jwt.utils.jwt_handle import jwt_payload_handler, jwt_encode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
