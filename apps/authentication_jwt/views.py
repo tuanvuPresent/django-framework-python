@@ -121,7 +121,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
     @swagger_auto_schema(request_body=ResetPasswordSerializer2)
     def reset_password_v2(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         token = serializer.validated_data
         return Response(data={'token': token})
 
@@ -129,7 +129,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
     @swagger_auto_schema(request_body=ResetPasswordCompleteSerializer)
     def reset_password_complete_v2(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         user = serializer.validated_data.get('user')
         new_password = serializer.validated_data.get('new_password')
         user.set_password(new_password)
@@ -140,21 +140,21 @@ class JWTAuthAPIView(BaseGenericViewSet):
     @swagger_auto_schema(request_body=ResetPasswordSerializer3)
     def reset_password_v3(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         return Response()
 
     @action(methods=['post'], detail=False, url_path='reset-pass-confirm-3', authentication_classes=[])
     @swagger_auto_schema(request_body=CheckResetPasswordSerializer3)
     def reset_password_confirm_v3(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         return Response()
 
     @action(methods=['post'], detail=False, url_path='reset-pass-complete-3', authentication_classes=[])
     @swagger_auto_schema(request_body=ResetPasswordCompleteSerializer3)
     def reset_password_complete_v3(self, request):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         return Response()
 
 
