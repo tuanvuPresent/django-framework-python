@@ -157,9 +157,10 @@ class ResetPasswordSerializer2(serializers.Serializer):
         if not user:
             raise CustomAPIException(ErrorCode.EMAIL_NOT_EXIST)
 
-        code = token_generator.make_code(user)
-        token = token_generator.make_token(user)
-        send_mail_reset_password_v2.delay(to_email=email, code=code)
+        time_token = datetime.now().timestamp()
+        code = token_generator.make_code(user, time_token)
+        token = token_generator.make_token(user, time_token)
+        send_mail_reset_password_v2(to_email=email, code=code)
         return token
 
 

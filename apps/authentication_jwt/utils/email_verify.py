@@ -1,12 +1,12 @@
 import random
 from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.crypto import constant_time_compare
 from django.utils.encoding import force_bytes
 from django.utils.http import base36_to_int, urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.crypto import constant_time_compare
 
-from apps.account.models import User
 from apps.authentication_jwt.models import ResetPasswordReferent
 from apps.authentication_jwt.utils.jwt_handle import jwt_encode_handler, jwt_decode_handler
 
@@ -15,11 +15,11 @@ class CustomEmailVerifyTokenGenerator:
     RESET_PASSWORD_CODE_LENGTH = 6
     RESET_PASSWORD_CODE_EXPIRATION_TIME = 60
 
-    def make_token(self, user):
+    def make_token(self, user, time_token):
         return jwt_encode_handler(
             {
                 'user_reset_password': user.id,
-                'orig_iat': datetime.now().timestamp()
+                'orig_iat': time_token
             }
         )
 
@@ -29,17 +29,21 @@ class CustomEmailVerifyTokenGenerator:
         except Exception:
             return False, None
         user_id = payload.get('user_reset_password')
-        user = User.objects.filter(id=user_id).first()
-        if not user:
+        reset_pass_ref = ResetPasswordReferent.objects.filter(
+            user_id=user_id,
+            token=payload.get('orig_iat'),
+            is_active=True
+        ).first()
+        if not reset_pass_ref:
             return False, None
-        return True, user
+        return True, reset_pass_ref.user_id
 
-    def make_code(self, user):
+    def make_code(self, user, time_token):
         token_length = settings.RESET_PASSWORD_CODE_LENGTH or self.RESET_PASSWORD_CODE_LENGTH
         allowed_chars = 'abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         code = "".join(random.sample(allowed_chars, token_length))
         ResetPasswordReferent.objects.filter(user_id=user).delete()
-        ResetPasswordReferent.objects.create(user_id=user, code=code)
+        ResetPasswordReferent.objects.create(user_id=user, code=code, token=time_token)
         return code
 
     def check_code(self, user, code):
