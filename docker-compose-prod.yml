@@ -43,7 +43,7 @@ services:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
     ports:
-      - 1221:1221
+      - 1221:80
     depends_on:
       - web
 
