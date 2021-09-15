@@ -81,7 +81,7 @@ services:
 volumes:
   static_volume:
   media_volume:
-#
+
 ##  postgres:
 ##    container_name: postgres_example
 ##    image: postgres
