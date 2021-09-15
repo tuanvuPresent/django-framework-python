@@ -31,7 +31,6 @@ services:
     volumes:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
-      - .:/usr/src/app
     expose:
       - 8011
     restart: always
@@ -61,8 +60,6 @@ services:
     depends_on:
       - rabbitmq
       - db
-    volumes:
-      - .:/usr/src/app
 
   celery-beat:
     restart: always
@@ -71,16 +68,12 @@ services:
     depends_on:
       - rabbitmq
       - db
-    volumes:
-      - .:/usr/src/app
 
   flower:
     build: .
     command: celery flower -A Example --broker=amqp://rabbitmq:5672//
     ports:
       - 5555:5555
-    volumes:
-      - .:/usr/src/app
     depends_on:
       - rabbitmq
       - db
