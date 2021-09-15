@@ -12,7 +12,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'sudo docker-compose -f docker-compose-prod.yml build'
+                sh 'docker-compose -f docker-compose-prod.yml build'
             }
         }
         stage('Delivery') {
@@ -23,7 +23,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'sudo docker-compose -f docker-compose-prod.yml up -d'
+                sh 'docker-compose -f docker-compose-prod.yml up -d'
             }
         }
     }
