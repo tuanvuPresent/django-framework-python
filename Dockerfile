@@ -29,3 +29,4 @@ COPY . /usr/src/app/
 COPY ./entrypoint.sh /usr/src/app/
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+RUN mkdir /usr/src/app/logs
