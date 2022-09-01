@@ -21,7 +21,7 @@ from drf_yasg.views import get_schema_view
 from graphene_django.views import GraphQLView
 from rest_framework import permissions
 
-from apps.book.schema import schema
+from apps.sample.book.schema import schema
 
 schema_view = get_schema_view(openapi.Info(
     title="MANAGER_API",
@@ -38,21 +38,9 @@ urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     url('admin/', admin.site.urls),
+    
+    url('api/', include('apps.urls')),
 
-    url('api/', include('apps.account.urls')),
-    url('api/', include('apps.todos.urls')),
-    url('api/', include('apps.upfile.urls')),
-    url('api/', include('apps.questions.urls')),
-    url('api/', include('apps.exportfile.urls')),
-    url('api/', include('apps.timesheet.urls')),
-    url('api/', include('apps.authentication.urls')),
-    url('api/', include('apps.sendmail.urls')),
-    url('api/', include('apps.shops.urls')),
-    url('api/', include('apps.exams.urls')),
-    url('api/', include('apps.authentication_jwt.urls')),
-    url('api/', include('apps.book.urls')),
-    url('api/', include('apps.my_phone_verify.urls')),
-    url('api/', include('apps.fcm_notify.urls')),
     url(r'^silk/', include('silk.urls', namespace='silk')),
     url('admin/log_viewer/', include('log_viewer.urls')),
     url("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),

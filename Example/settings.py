@@ -29,24 +29,11 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
-    'apps.book',
-    'apps.authentication_jwt',
-    'apps.exams',
-    'apps.sendmail',
-    'apps.authentication',
-    'apps.timesheet',
-    'apps.exportfile',
-    'apps.questions',
-    'apps.upfile',
     'apps.common',
-    'apps.todos',
     'apps.account',
-    'apps.shops',
-    'apps.demo_firebase',
-    'apps.chatbot',
-    'apps.my_phone_verify',
-    'apps.fcm_notify',
+    'apps',
 
+    'rest_pyotp',
     'rest_framework.authtoken',
     'silk',
     'drf_yasg',

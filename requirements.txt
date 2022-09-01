@@ -37,3 +37,5 @@ django-log-viewer==1.1.1
 graphene~=2.1.8
 graphene-django==2.11.0
 user-agents==2.2.0
+Pyrebase4
+rest_pyotp==0.5.6

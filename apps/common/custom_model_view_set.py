@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.viewsets import GenericViewSet
 
-from apps.authentication_jwt.custom_authentication import JWTAuthentication
+from apps.common.custom_authentication import JWTAuthentication
 from apps.common.serializer import NoneSerializer
 
 

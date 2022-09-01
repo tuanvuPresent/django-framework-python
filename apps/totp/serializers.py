@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.totp.utils import TotpService
+from apps.totp.utils import TotpService
 
 
 class TOTPProvisionUriSerializer(serializers.Serializer):

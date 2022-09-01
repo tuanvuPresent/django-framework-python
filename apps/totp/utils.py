@@ -2,7 +2,7 @@ from urllib.parse import quote, urlencode
 
 import pyotp
 
-from api.totp.models import UserOtpDevice
+from apps.totp.models import UserOtpDevice
 
 
 class TotpService:

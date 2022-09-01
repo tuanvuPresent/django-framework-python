@@ -24,7 +24,7 @@ from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 from apps.common.serializer import NoneSerializer
 from apps.exportfile.serializer import CVSFileSerializer
-from apps.questions.models import Question
+from apps.e_learning.questions.models import Question
 from apps.upfile.serializer import FileSerializer
 
 

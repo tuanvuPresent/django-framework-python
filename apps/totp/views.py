@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_pyotp.serializers import NoneSerializer
 
-from api.totp.models import UserOtpDevice
-from api.totp.serializers import TOTPProvisionUriSerializer, VerifyOtpSerilaizer
+from apps.totp.models import UserOtpDevice
+from apps.totp.serializers import TOTPProvisionUriSerializer, VerifyOtpSerilaizer
 
 
 class AuthOtpViewSet(viewsets.GenericViewSet):

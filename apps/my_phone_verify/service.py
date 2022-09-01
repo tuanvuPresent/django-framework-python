@@ -5,7 +5,7 @@ import requests
 from django.core.exceptions import ImproperlyConfigured
 
 from Example import settings
-from apps.authentication_jwt.utils.jwt_handle import jwt_encode_handler
+from apps.common.jwt_handle import jwt_encode_handler
 from apps.my_phone_verify.models import Phone
 
 
