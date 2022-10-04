@@ -21,7 +21,7 @@ env_config = Config(RepositoryEnv(ENV_FILE))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'a5aj@zcwqzqkf1kc^p*xkevbzk(#y8231*w5hbcq=k#t8qu^ha'
+SECRET_KEY = env_config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_config("DEBUG", cast=bool)
@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'constance',
+    'constance.backends.database',
 ]
 
 MIDDLEWARE = [
@@ -67,18 +69,18 @@ MIDDLEWARE = [
 
     'silk.middleware.SilkyMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_REGEX_WHITELIST = [
+
+# Cors
+CORS_ALLOWED_ORIGINS = [
     'http://localhost:3030',
 ]
+
 ROOT_URLCONF = 'Example.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -193,6 +195,19 @@ REST_FRAMEWORK = {
     }
 }
 AUTH_USER_MODEL = 'account.User'
+FORMAT_DATE = '%Y/%m/%d'
+FORMAT_DATETIME = '%Y/%m/%d %X'
+X_CHATWORKTOKEN = env_config('X_CHATWORKTOKEN')
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'apps.common.authentication_backend.SettingsBackend',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+]
+
+# Swagger
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
 
@@ -204,6 +219,7 @@ SWAGGER_SETTINGS = {
     },
 }
 
+# Email
 EXPIRING_TOKEN_DURATION = datetime.timedelta(days=1)
 EMAIL_HOST = env_config('EMAIL_HOST')
 EMAIL_BACKEND = env_config('EMAIL_BACKEND')
@@ -214,19 +230,7 @@ EMAIL_USE_TLS = env_config('EMAIL_USE_TLS', cast=bool)
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-FORMAT_DATE = '%Y/%m/%d'
-FORMAT_DATETIME = '%Y/%m/%d %X'
-
-X_CHATWORKTOKEN = env_config('X_CHATWORKTOKEN')
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'apps.common.authentication_backend.SettingsBackend',
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.github.GithubOAuth2',
-]
-
+# Resdis or rabbitmq + celery
 # config redis - celery
 # BROKER_URL = 'redis://redis:6379'
 # CELERY_RESULT_BACKEND = 'redis://redis:6379'
@@ -241,12 +245,14 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
+# social auth
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env_config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env_config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env_config(
+    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_FACEBOOK_KEY = env_config('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = env_config('SOCIAL_AUTH_FACEBOOK_SECRET')
 
+# phone verification
 PHONE_VERIFICATION = {
     "BACKEND": "phone_verify.backends.twilio.TwilioBackend",
     "OPTIONS": {
@@ -261,6 +267,7 @@ PHONE_VERIFICATION = {
     "VERIFY_SECURITY_CODE_ONLY_ONCE": True,
 }
 
+# jwt
 JWT_AUTH = {
     'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_GET_USER_SECRET_KEY': None,
@@ -279,6 +286,7 @@ JWT_AUTH = {
     'JWT_AUTH_COOKIE': 'JWT',
 }
 
+# fcm
 FCM_DJANGO_SETTINGS = {
     "APP_VERBOSE_NAME": "test",
     "FCM_SERVER_KEY": env_config('FCM_SERVER_KEY'),
@@ -286,18 +294,18 @@ FCM_DJANGO_SETTINGS = {
     "DELETE_INACTIVE_DEVICES": True,
 }
 
+# logs
 LOG_VIEWER_FILES = ['debug.log']
 LOG_VIEWER_FILES_PATTERN = '*.log'
 LOG_VIEWER_FILES_DIR = os.path.join(BASE_DIR, 'logs')
 LOG_VIEWER_MAX_READ_LINES = 1000  # total log lines will be read
 LOG_VIEWER_PAGE_LENGTH = 25  # total log lines per-page
-LOG_VIEWER_PATTERNS = [']OFNI[', ']GUBED[', ']GNINRAW[', ']RORRE[', ']LACITIRC[']
-
-# Optionally you can set the next variables in order to customize the admin:
-
+LOG_VIEWER_PATTERNS = [']OFNI[', ']GUBED[',
+                       ']GNINRAW[', ']RORRE[', ']LACITIRC[']
 LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
 LOG_VIEWER_FILE_LIST_STYLES = "/static/css/my-custom.css"
-
+if not os.path.exists('logs'):
+    os.mkdir('logs')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -359,7 +367,17 @@ LOGGING = {
         },
     }
 }
+
+# reset password
 RESET_PASSWORD_CODE_LENGTH = env_config('RESET_PASSWORD_CODE_LENGTH', cast=int)
-RESET_PASSWORD_CODE_EXPIRATION_TIME = env_config('RESET_PASSWORD_CODE_EXPIRATION_TIME', cast=int)
-RESET_PASSWORD_EXPIRATION_TIME = env_config('RESET_PASSWORD_EXPIRATION_TIME', cast=int)
+RESET_PASSWORD_CODE_EXPIRATION_TIME = env_config(
+    'RESET_PASSWORD_CODE_EXPIRATION_TIME', cast=int)
+RESET_PASSWORD_EXPIRATION_TIME = env_config(
+    'RESET_PASSWORD_EXPIRATION_TIME', cast=int)
 LINK_RESET_PASSWORD = env_config('LINK_RESET_PASSWORD')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'NAME': ('', 'name', str),
+}

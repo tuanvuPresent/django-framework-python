@@ -28,10 +28,7 @@ services:
   web:
     container_name: web-example
     build: .
-    command: bash -c "
-      python manage.py migrate
-      && python manage.py loaddata fixtures/*
-      && python manage.py runserver 0.0.0.0:${WEB_PORT}"
+    command: bash -c "python manage.py runserver 0.0.0.0:${WEB_PORT}"
     ports:
       - ${WEB_PORT}:8888
     restart: always
@@ -77,10 +74,10 @@ services:
       - rabbitmq
       - db
 
-#  redis:
-#    restart: always
-#    image: "redis:alpine"
-#    command: redis-server
+  redis:
+    restart: always
+    image: "redis:alpine"
+    command: redis-server
 
 ##  postgres:
 ##    container_name: postgres_example
