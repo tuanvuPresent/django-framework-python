@@ -31,6 +31,15 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'apps.common',
     'apps.account',
+    'apps.auth.jwt.v1',
+    'apps.e_learning.exams',
+    'apps.e_learning.questions',
+    'apps.my_phone_verify',
+    'apps.sample.book',
+    'apps.sample.timesheet',
+    'apps.sample.todos',
+    'apps.shops',
+    'apps.totp',
     'apps',
 
     'rest_pyotp',
