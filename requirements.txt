@@ -6,7 +6,7 @@ djangorestframework==3.11.1
 coreapi==2.3.3 # https://github.com/core-api/python-client
 django-cors-headers==3.5.0 # https://pypi.org/project/django-cors-headers/
 drf_yasg==1.17.1
-mysqlclient==2.0.1 #sudo apt-get install libmariadbclient-dev
+mysqlclient==2.0.1 #sudo apt-get install libmysqlclient-dev
 pyexcel_xlsx==0.5.8
 django-crontab==0.7.1
 xlwt==1.3.0
