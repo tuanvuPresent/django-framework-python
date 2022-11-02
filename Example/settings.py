@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'apps.sample.todos',
     'apps.shops',
     'apps.totp',
+    'apps.paypal',
     'apps',
 
     'rest_pyotp',
