@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from api.paypal.serializer import CaptureOrderViewSerializer, CreateOrderViewRemoteSerializer
-from api.paypal.paypal_service import PayPalService
+from apps.paypal.serializer import CaptureOrderViewSerializer, CreateOrderViewRemoteSerializer
+from apps.paypal.paypal_service import PayPalService
 
 
 class PaymentViewSet(GenericViewSet):
