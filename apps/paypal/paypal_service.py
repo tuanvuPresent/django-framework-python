@@ -2,7 +2,7 @@ import base64
 
 import requests
 
-from api.paypal.config import paypal_settings
+from apps.paypal.config import paypal_settings
 
 
 class PayPalService:
