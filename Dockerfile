@@ -19,6 +19,7 @@ ENV PYTHONUNBUFFERED 1
 # install dependencies
 RUN pip install --upgrade pip
 RUN pip install pipenv
+RUN pip3 install wheel
 COPY ./requirements.txt /usr/src/app/
 RUN pip install -r requirements.txt
 
