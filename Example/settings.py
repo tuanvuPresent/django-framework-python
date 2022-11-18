@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'fcm_django',
     'log_viewer',
     'graphene_django',
+    'constance',
+    'constance.backends.database',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,26 +65,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'constance',
-    'constance.backends.database',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-
     'silk.middleware.SilkyMiddleware',
 ]
 
 # Cors
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3030',
+    'http://localhost:8002',
 ]
 
 ROOT_URLCONF = 'Example.urls'
@@ -108,7 +107,6 @@ WSGI_APPLICATION = 'Example.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 if env_config('DATABASES_NAME', 'None').lower() == 'postgres':
-    # config data-base postgres
     DATABASES = {
         "default": {
             "ENGINE": env_config("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
@@ -120,7 +118,6 @@ if env_config('DATABASES_NAME', 'None').lower() == 'postgres':
         }
     }
 elif env_config('DATABASES_NAME', 'None').lower() == 'mysql':
-    # config data-base mysql
     DATABASES = {
         'default': {
             'ENGINE': env_config("MY_SQL_ENGINE", "django.db.backends.sqlite3"),
@@ -129,11 +126,6 @@ elif env_config('DATABASES_NAME', 'None').lower() == 'mysql':
             'PASSWORD': env_config("MYSQL_PASSWORD", "admin"),
             'HOST': env_config("MY_SQL_HOST", "127.0.0.1"),
             'PORT': env_config("MYSQL_PORT", "3306"),
-            # 'OPTIONS': {
-            #     'init_command':
-            #         'ALTER DATABASE {} CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs'.format(
-            #             env_config("MYSQL_DATABASE", "db"))
-            # }
         }
     }
 else:
@@ -240,17 +232,9 @@ EMAIL_USE_TLS = env_config('EMAIL_USE_TLS', cast=bool)
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# Resdis or rabbitmq + celery
-# config redis - celery
-# BROKER_URL = 'redis://redis:6379'
-# CELERY_RESULT_BACKEND = 'redis://redis:6379'
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-
-# config rabbitmq - celery
-BROKER_URL = "amqp://rabbitmq:5672//"
-CELERY_RESULT_BACKEND = 'amqp://rabbitmq:5672//'
+# Queue config ( Redis - rabbitmq )
+CELERY_BROKER_URL = env_config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -314,8 +298,7 @@ LOG_VIEWER_PATTERNS = [']OFNI[', ']GUBED[',
                        ']GNINRAW[', ']RORRE[', ']LACITIRC[']
 LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
 LOG_VIEWER_FILE_LIST_STYLES = "/static/css/my-custom.css"
-if not os.path.exists('logs'):
-    os.mkdir('logs')
+os.makedirs('logs', exist_ok=True)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
