@@ -20,6 +20,8 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pip3 install wheel
+RUN apt-get install -y libmysqlclient-dev
+
 COPY ./requirements.txt /usr/src/app/
 RUN pip install -r requirements.txt
 
