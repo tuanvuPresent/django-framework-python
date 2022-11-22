@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.upfile.constant import ImageUploadInfo
+from apps.upfile.models import FileStore
 
 
 class FileSerializer(serializers.Serializer):
@@ -18,3 +19,10 @@ class FileSerializer(serializers.Serializer):
             raise serializers.ValidationError('wrong file format')
 
         return file
+
+
+class FileStoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FileStore
+        fields = ('url',)

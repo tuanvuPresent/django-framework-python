@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'apps.shops',
     'apps.totp',
     'apps.paypal',
+    'apps.upfile',
     'apps',
 
     'rest_pyotp',
@@ -269,7 +270,7 @@ JWT_AUTH = {
     'JWT_VERIFY': True,
     'JWT_VERIFY_EXPIRATION': True,
     'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=3000),
     'JWT_AUDIENCE': None,
     'JWT_ISSUER': None,
 

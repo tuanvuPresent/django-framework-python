@@ -6,12 +6,11 @@ from rest_framework.response import Response
 from apps.common.custom_model_view_set import BaseGenericViewSet
 from apps.upfile.constant import ImageUploadInfo
 from apps.upfile.handle_image import add_file
-from apps.upfile.serializer import FileSerializer
+from apps.upfile.serializer import FileSerializer, FileStoreSerializer
 
 
 class FileUploadView(BaseGenericViewSet):
     throttle_scope = 'upload'
-
     parser_classes = (MultiPartParser,)
 
     @action(methods=['POST'], detail=False, url_path='image')
@@ -26,3 +25,21 @@ class FileUploadView(BaseGenericViewSet):
         file_url = request.build_absolute_uri(file_url)
 
         return Response(data=file_url)
+
+class FileUploadViewSet(BaseGenericViewSet):
+    throttle_scope = 'upload'
+    parser_classes = (MultiPartParser,)
+    serializer_action_classes = {
+        'post_upload_file' : FileStoreSerializer
+    }
+
+    @action(methods=['POST'], detail=False, url_path='image')
+    @swagger_auto_schema(request_body=FileStoreSerializer)
+    def post_upload_file(self, request):
+        file = request.FILES
+
+        serializer = self.get_serializer(data=file)
+        print(serializer)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
