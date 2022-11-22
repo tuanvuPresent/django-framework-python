@@ -20,7 +20,7 @@ from rest_framework.viewsets import GenericViewSet
 from apps.account.models import User
 from apps.common.constant import ErrorCode
 from apps.common.custom_exception_handler import CustomAPIException
-# Create your views here.
+from apps.exportfile.export_service import ExportService
 from apps.common.custom_model_view_set import BaseGenericViewSet
 from apps.common.serializer import NoneSerializer
 from apps.exportfile.serializer import CVSFileSerializer
@@ -82,6 +82,17 @@ class ExportAPIView(GenericViewSet):
     #     response['Content-Disposition'] = 'attachment; filename=""' + file_name
     #     df.to_excel(response, index=False)
     #     return response
+
+
+class ExportV2APIView(GenericViewSet):
+
+    @action(methods=['GET'], detail=False)
+    def export_users_xls(self, request):
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="users.xls"'
+        
+        response = ExportService().export(response)
+        return response
 
 class ImportAPIView(BaseGenericViewSet):
     parser_classes = (MultiPartParser,)

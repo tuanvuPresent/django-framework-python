@@ -33,4 +33,21 @@ class UuidGenerator:
         return self._ts << 23 | self._inf << 10 | self._seq
 
 
+class UuidGenSingletonGroup:
+    _instances = {}
+    uuid = None
+
+    def __new__(cls, name):
+        if not cls._instances.get((cls.__name__, name)):
+            cls._instances[(cls.__name__, name)] = super(UuidGenSingletonGroup, cls).__new__(cls)
+            cls.uuid = UuidGenerator(epoch=EPOCH_TIME, instance=INSTANCE_GEN_ID)
+        return cls._instances.get((cls.__name__, name))
+
+    def __init__(self, name):
+        self.name = name
+
+    def gen(self):
+        return next(self.uuid)
+
+
 uuid = UuidGenerator(epoch=EPOCH_TIME, instance=INSTANCE_GEN_ID)

@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils.timezone import now
-
+from apps.common.uuid_gen import UuidGenSingletonGroup
 
 class BaseManager(models.Manager):
 
@@ -20,6 +20,17 @@ class BaseModel(models.Model):
         self.is_active = False
         self.deleted_at = now()
         self.save()
+
+    class Meta:
+        abstract = True
+
+
+class UuidModel(models.Model):
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.id = UuidGenSingletonGroup(self.__class__).gen()
+        super(UuidModel, self).save(True, force_update, using, update_fields)
 
     class Meta:
         abstract = True

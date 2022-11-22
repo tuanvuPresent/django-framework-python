@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.totp',
     'apps.paypal',
     'apps.upfile',
+    'apps.exportfile',
     'apps',
 
     'rest_pyotp',

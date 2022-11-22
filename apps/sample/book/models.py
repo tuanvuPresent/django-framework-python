@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from apps.common.uuid_gen import uuid
-from apps.common.models import BaseModel
+from apps.common.models import BaseModel, UuidModel
 
 
 # Create your models here.
@@ -14,7 +14,7 @@ class Author(BaseModel):
     name = models.CharField(max_length=64, unique=True)
 
 
-class Book(BaseModel):
+class Book(UuidModel):
     id = models.BigIntegerField(primary_key=True, default=uuid.__next__, editable=False)
     name = models.CharField(max_length=64, unique=True)
     type_book = models.ForeignKey(TypeBook, on_delete=models.CASCADE, related_name='type_book')
