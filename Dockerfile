@@ -31,6 +31,7 @@ RUN apk update \
     && apk add musl-dev mariadb-dev gcc  \
       build-base gcc python3-dev postgresql-dev musl-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
+RUN pip3 install wheel
 COPY ./requirements.txt /usr/src/app/
 RUN pip install --no-cache -r requirements.txt
 
