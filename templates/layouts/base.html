@@ -1,0 +1,40 @@
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    Django Sample
+  </title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <link href="{% static 'css/nucleo-icons.css' %}" rel="stylesheet" />
+  <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <link href="{% static 'css/nucleo-svg.css' %}" rel="stylesheet" />
+  <link id="pagestyle" href="{% static 'css/argon-dashboard.css' %}" rel="stylesheet" />
+  {% block extrahead %}{% endblock extrahead %}
+  {% block extrastyle %}{% endblock extrastyle %}
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+{% block overlay %}{% endblock overlay %}
+{% block sidebar %}
+  {% include "includes/sidebar.html" %}
+{% endblock sidebar %}
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        {% block navigation %}
+          {% include "includes/navigation.html" %} 
+        {% endblock navigation %}
+        
+        {% block content %}{% endblock content %}
+    </main>
+{% include 'includes/scripts.html' %}
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>
