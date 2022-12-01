@@ -29,8 +29,9 @@ class UuidModel(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.id = UuidGenSingletonGroup(self.__class__).gen()
-        super(UuidModel, self).save(True, force_update, using, update_fields)
+        if not self.id:
+            self.id = UuidGenSingletonGroup(self.__class__).gen()
+        super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         abstract = True
