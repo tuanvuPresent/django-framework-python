@@ -15,7 +15,6 @@ class Author(BaseModel):
 
 
 class Book(UuidModel):
-    id = models.BigIntegerField(primary_key=True, default=uuid.__next__, editable=False)
     name = models.CharField(max_length=64, unique=True)
     type_book = models.ForeignKey(TypeBook, on_delete=models.CASCADE, related_name='type_book')
     date_of_manufacture = models.DateTimeField()

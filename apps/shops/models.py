@@ -1,16 +1,16 @@
 from django.db import models
-
+from enum import Enum
 from apps.account.models import User
-from apps.common.models import BaseModel
+from apps.common.models import BaseModel, UuidModel
 
 
-# Create your models here.
 class TypeProduct(BaseModel):
     name = models.CharField(max_length=64)
 
 
 class Product(BaseModel):
-    type_id = models.ForeignKey(TypeProduct, on_delete=models.CASCADE, related_name='products')
+    type_id = models.ForeignKey(
+        TypeProduct, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=64, unique=True)
     price = models.IntegerField()
     quantity = models.IntegerField()
@@ -22,14 +22,16 @@ class Product(BaseModel):
 
 
 class Promotion(BaseModel):
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='promotion_product')
+    product_id = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='promotion_product')
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
     discount = models.CharField(max_length=64)
 
 
 class Order(BaseModel):
-    user_order = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_order')
+    user_order = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_order')
     address = models.CharField(max_length=64)
     phone = models.TextField(max_length=16)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -42,8 +44,10 @@ class Order(BaseModel):
 
 
 class OrderDetail(BaseModel):
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_detail')
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_product')
+    order_id = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name='order_detail')
+    product_id = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='order_product')
     product_quantity = models.IntegerField()
     product_price = models.IntegerField(default=0)
     amount = models.CharField(max_length=64, null=True)
@@ -52,3 +56,38 @@ class OrderDetail(BaseModel):
 class Revenue(BaseModel):
     date = models.DateField(auto_now_add=True)
     total = models.CharField(max_length=64, default=None, null=True)
+
+
+# ----
+
+class EntityProduct(UuidModel):
+    name = models.CharField(max_length=255)
+    is_visiable = models.BooleanField(default=False)
+
+
+class AttributeProduct(UuidModel):
+    class ValueType(Enum):
+        STR = 0
+        INT = 1
+        BOOL = 2
+    name = models.CharField(max_length=31)
+    type_value = models.SmallIntegerField(choices=[(
+        item.value, item.value) for item in ValueType], default=ValueType.STR.value)
+
+
+class IntegerValue(UuidModel):
+    entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
+    value = models.IntegerField()
+
+
+class BooleanValue(UuidModel):
+    entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
+    value = models.BooleanField()
+
+
+class IntegerValue(UuidModel):
+    entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
+    value = models.CharField(max_length=255)

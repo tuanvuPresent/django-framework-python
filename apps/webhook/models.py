@@ -8,7 +8,6 @@ from api.webhook.tasks import deliver_hook_event
 
 
 class WebhookTarget(UuidModel):
-    id = models.BigIntegerField(primary_key=True, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     event = models.CharField(max_length=63)
     target_url = models.CharField(max_length=255)
