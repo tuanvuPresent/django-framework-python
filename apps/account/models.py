@@ -4,11 +4,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from apps.account.constant import GENDER_CHOICES, MALE, USER_TYPE, STAFF
-from apps.common.models import BaseModel
+from apps.common.models import BaseModel, UuidModel
 
 
 # Create your models here.
-class User(AbstractUser):
+class User(UuidModel, AbstractUser):
     username = models.CharField(max_length=64, unique=True)
     email = models.EmailField(max_length=64, unique=True, null=True)
     user_type = models.CharField(choices=USER_TYPE, default=STAFF, max_length=8)
@@ -34,7 +34,7 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
 
-class UserProfile(BaseModel):
+class UserProfile(UuidModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     dob = models.DateField()
     address = models.CharField(max_length=255)
