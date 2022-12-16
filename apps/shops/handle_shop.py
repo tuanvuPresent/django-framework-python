@@ -4,7 +4,7 @@ from apps.shops.models import OrderDetail
 
 
 def update_quantity_product(order):
-    queryset = OrderDetail.objects.filter(is_active=True, order_id=order)
+    queryset = OrderDetail.objects.filter(order_id=order)
     for order_detail in queryset:
         product = order_detail.product_id
         product.quantity -= order_detail.product_quantity

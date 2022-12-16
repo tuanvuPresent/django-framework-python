@@ -3,7 +3,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "13d68d93ac964f8d8b2fdf1453f81cb3",
-      "is_active": "1",
       "content": "ans AAA",
       "is_true": "1",
       "question_id_id": "759bcd3e62cf4053a60459e5dbfe55d6"
@@ -13,7 +12,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "657d3d6df8fc4acebf2c6176cba350d3",
-      "is_active": "1",
       "content": "ans AAA",
       "is_true": "1",
       "question_id_id": "2a07b4529a1945e9b2854361cba31695"
@@ -23,9 +21,7 @@
     "model": "questions.answer",
     "fields": {
       "id": "6a6cf7dc9b8f4d17bd51e37c84ad1059",
-      "is_active": "1",
       "content": "ans AAA",
-      "is_true": "1",
       "question_id_id": "7186290b5e8b47d0b86bdd2e69414b9d"
     }
   },
@@ -33,9 +29,7 @@
     "model": "questions.answer",
     "fields": {
       "id": "6da87b7e4fa84b8487a38e371b5e5524",
-      "is_active": "1",
       "content": "ans BBb",
-      "is_true": "1",
       "question_id_id": "2a07b4529a1945e9b2854361cba31695"
     }
   },
@@ -43,7 +37,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "700e0d13b4ab43d399829e647cec2f84",
-      "is_active": "1",
       "content": "ans CCC",
       "is_true": "1",
       "question_id_id": "2a07b4529a1945e9b2854361cba31695"
@@ -53,7 +46,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "7cc94742e3df43deb012acb298b1ca6e",
-      "is_active": "1",
       "content": "ans AAA",
       "is_true": "1",
       "question_id_id": "2762b2bae7d445048874e810038efb2c"
@@ -63,7 +55,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "7d9b3333fd8e468f8f17cf865d901513",
-      "is_active": "1",
       "content": "ans AAA",
       "is_true": "1",
       "question_id_id": "ebbf1c8ce62648038f531437a230ee5e"
@@ -73,7 +64,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "8736fdc5fb884bccb2683a8ec73962a6",
-      "is_active": "1",
       "content": "ans BBb",
       "is_true": "1",
       "question_id_id": "7186290b5e8b47d0b86bdd2e69414b9d"
@@ -83,7 +73,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "87fe134f54334707b90aada63fd90f81",
-      "is_active": "1",
       "content": "ans DDD",
       "is_true": "1",
       "question_id_id": "2762b2bae7d445048874e810038efb2c"
@@ -93,7 +82,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "a474fdfa002942af83813b3257f22cb3",
-      "is_active": "1",
       "content": "ans CCC",
       "is_true": "1",
       "question_id_id": "2762b2bae7d445048874e810038efb2c"
@@ -103,7 +91,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "a85b950205454c17a4ddd3ff4d92e151",
-      "is_active": "1",
       "content": "ans BBB",
       "is_true": "1",
       "question_id_id": "2762b2bae7d445048874e810038efb2c"
@@ -113,7 +100,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "e4d59c0ac8c9419197f45ac637f3be32",
-      "is_active": "1",
       "content": "ans BBb",
       "is_true": "1",
       "question_id_id": "759bcd3e62cf4053a60459e5dbfe55d6"
@@ -123,7 +109,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "e5a4e8253c274a6580f42384e4daabe9",
-      "is_active": "1",
       "content": "ans CCC",
       "is_true": "1",
       "question_id_id": "759bcd3e62cf4053a60459e5dbfe55d6"
@@ -133,7 +118,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "f6d5298508da4cf5bfda211384705306",
-      "is_active": "1",
       "content": "ans CCC",
       "is_true": "1",
       "question_id_id": "7186290b5e8b47d0b86bdd2e69414b9d"
@@ -143,7 +127,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "f8b0e400c5234a5d950100a0839a6d95",
-      "is_active": "1",
       "content": "ans BBb",
       "is_true": "1",
       "question_id_id": "ebbf1c8ce62648038f531437a230ee5e"
@@ -153,7 +136,6 @@
     "model": "questions.answer",
     "fields": {
       "id": "fda672d5adeb4e94923274642a88124a",
-      "is_active": "1",
       "content": "ans CCC",
       "is_true": "1",
       "question_id_id": "ebbf1c8ce62648038f531437a230ee5e"

@@ -34,10 +34,10 @@ class QuestionAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        return Question.objects.filter(is_active=True).prefetch_related(
+        return Question.objects.all().prefetch_related(
             Prefetch(
                 'answers',
-                queryset=Answer.objects.filter(is_active=True),
+                queryset=Answer.objects.all(),
             )
         ).select_related('category_id')
 
@@ -46,12 +46,12 @@ class QuestionAPIView(BaseModelViewSet):
     @action(methods=['DELETE'], detail=False)
     def delete(self, request):
         pk = request.data['pk']
-        questions = Question.objects.filter(is_active=True, id__in=pk)
+        questions = Question.objects.filter(id__in=pk)
         if questions.count() != len(pk):
             raise NotFound()
-        questions.update(is_active=False)
+        questions.delete()
 
-        exams = set(Exams.objects.filter(is_active=True, question_id__in=pk))
+        exams = set(Exams.objects.filter(question_id__in=pk))
         update_exams(questions, exams)
         update_exam_config(questions, exams)
 

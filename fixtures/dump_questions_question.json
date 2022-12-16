@@ -3,7 +3,6 @@
     "model": "questions.question",
     "fields": {
       "id": "2762b2bae7d445048874e810038efb2c",
-      "is_active": "1",
       "content": "question 3",
       "level": "Know",
       "fix_answer": "1",
@@ -17,7 +16,6 @@
     "model": "questions.question",
     "fields": {
       "id": "2a07b4529a1945e9b2854361cba31695",
-      "is_active": "1",
       "content": "question 1",
       "level": "Understanding",
       "fix_answer": "1",
@@ -31,7 +29,6 @@
     "model": "questions.question",
     "fields": {
       "id": "7186290b5e8b47d0b86bdd2e69414b9d",
-      "is_active": "1",
       "content": "question 2",
       "level": "Know",
       "fix_answer": "1",
@@ -45,7 +42,6 @@
     "model": "questions.question",
     "fields": {
       "id": "759bcd3e62cf4053a60459e5dbfe55d6",
-      "is_active": "1",
       "content": "question 4",
       "level": "Know",
       "fix_answer": "1",
@@ -59,7 +55,6 @@
     "model": "questions.question",
     "fields": {
       "id": "ebbf1c8ce62648038f531437a230ee5e",
-      "is_active": "1",
       "content": "question 6",
       "level": "Understanding",
       "fix_answer": "1",

@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from apps.account.constant import GenderType, UserType
-from apps.common.models import BaseModel, UuidModel
+from apps.common.models import UuidModel
 
 
 # Create your models here.

@@ -16,7 +16,6 @@ class CreateAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields = ['content', 'is_true']
-        read_only_fields = ['is_active']
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -31,8 +30,8 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id', 'content', 'level', 'fix_answer', 'is_active', 'date_create', 'category_id', 'answers', 'key']
-        read_only_fields = ['date_create', 'is_active']
+        fields = ['id', 'content', 'level', 'fix_answer', 'date_create', 'category_id', 'answers', 'key']
+        read_only_fields = ['date_create']
         extra_kwargs = {
             'date_create': {'format': settings.FORMAT_DATETIME}
         }
@@ -42,7 +41,7 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
         category_id = validated_data.pop('category_id')
         name_category = category_id.get('name')
 
-        category, is_create = Category.objects.get_or_create(name=name_category, is_active=True)
+        category, is_create = Category.objects.get_or_create(name=name_category)
         question = Question.objects.create(category_id=category, **validated_data)
 
         # CACH 1:
@@ -58,7 +57,7 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
         category_id = validated_data.pop('category_id', instance.category_id)
 
         name_category = category_id.get('name')
-        category, is_create = Category.objects.get_or_create(name=name_category, is_active=True)
+        category, is_create = Category.objects.get_or_create(name=name_category)
         instance = super().update(instance, validated_data)
         instance.category_id = category
 
@@ -75,8 +74,7 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
         #         Answer.objects.create(question_id=instance, **ans_data)
         # while len(answers):
         #     answer = answers.pop(0)
-        #     answer.is_active = False
-        #     answer.save()
+        #     answer.delete()
 
         # CACH 2
         Answer.objects.filter(question_id=instance).delete()
@@ -94,11 +92,10 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('length content must <= 1000')
 
         request = self.context.get('request')
-        if request.method == 'POST' and Question.objects.filter(is_active=True, content=content.strip()):
+        if request.method == 'POST' and Question.objects.filter(content=content.strip()):
             raise serializers.ValidationError('questions with this content already exists.')
 
-        if request.method == 'PUT' and Question.objects.exclude(id=self.instance.pk).filter(is_active=True,
-                                                                                            content=content.strip()):
+        if request.method == 'PUT' and Question.objects.exclude(id=self.instance.pk).filter(content=content.strip()):
             raise serializers.ValidationError('questions with this content already exists.')
 
         return content
@@ -130,9 +127,9 @@ class ListQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id', 'content', 'level', 'category_id', 'fix_answer', 'is_active', 'date_create', 'date_update',
+        fields = ['id', 'content', 'level', 'category_id', 'fix_answer', 'date_create', 'date_update',
                   'answers', 'key']
-        read_only_fields = ['date_create', 'is_active']
+        read_only_fields = ['date_create']
         extra_kwargs = {
             'date_create': {'format': settings.FORMAT_DATETIME},
             'date_update': {'format': settings.FORMAT_DATETIME}

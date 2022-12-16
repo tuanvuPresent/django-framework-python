@@ -10,7 +10,7 @@ def scheduled_update_revenue():
         date=today
     )
 
-    queryset = Order.objects.filter(is_active=True, is_pay=True, date_pay=today)
+    queryset = Order.objects.filter(is_pay=True, date_pay=today)
     total = 0
     for order in queryset:
         try:

@@ -5,21 +5,25 @@ from django.utils.timezone import now
 from apps.common.uuid_gen import UuidGenSingletonGroup
 
 
-class BaseManager(models.Manager):
+class SoftDeleteManager(models.Manager):
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True, deleted_at=None)
+        return super().get_queryset().filter(deleted_at=None)
 
 
-class BaseModel(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    is_active = models.BooleanField(default=True)
+class AllSoftDeleteManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset()
+
+
+class SoftDeleteModel(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
 
-    objects = BaseManager()
+    objects = SoftDeleteManager()
+    all_objects = SoftDeleteManager()
 
     def delete(self, using=None, keep_parents=False):
-        self.is_active = False
         self.deleted_at = now()
         self.save()
 

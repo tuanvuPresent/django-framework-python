@@ -44,7 +44,7 @@ class ProductAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True).filter(type_id__is_active=True).select_related('type_id')
+        queryset = Product.objects.all().select_related('type_id')
         return queryset
 
     @transaction.atomic()
@@ -52,10 +52,10 @@ class ProductAPIView(BaseModelViewSet):
     @action(methods=['delete'], detail=False)
     def delete(self, request):
         pk = request.data.get('pk')
-        product = Product.objects.filter(is_active=True, id__in=pk)
+        product = Product.objects.filter(id__in=pk)
         if product.count() != len(pk):
             raise Http404
-        product.update(is_active=False)
+        product.delete()
         return Response()
 
 
@@ -87,17 +87,17 @@ class OrderAPIView(BaseModelViewSet):
 
     def get_queryset(self):
         if self.request.method == 'GET':
-            queryset = Order.objects.filter(is_active=True).prefetch_related(
+            queryset = Order.objects.all().prefetch_related(
                 Prefetch(
                     'order_detail',
-                    queryset=OrderDetail.objects.filter(is_active=True)
+                    queryset=OrderDetail.objects.all()
                 )
             )
         else:
-            queryset = Order.objects.filter(is_active=True, is_pay=False).prefetch_related(
+            queryset = Order.objects.filter(is_pay=False).prefetch_related(
                 Prefetch(
                     'order_detail',
-                    queryset=OrderDetail.objects.filter(is_active=True)
+                    queryset=OrderDetail.objects.all()
                 )
             )
         return queryset
@@ -107,10 +107,10 @@ class OrderAPIView(BaseModelViewSet):
     @action(methods=['DELETE'], detail=False)
     def delete(self, request):
         pk = request.data.get('pk')
-        order = Order.objects.filter(is_active=True, id__in=pk)
+        order = Order.objects.filter(id__in=pk)
         if order.count() != len(pk):
             raise Http404
-        order.update(is_active=False)
+        order.delete()
         return Response()
 
     @swagger_auto_schema(request_body=PaymentConfirmSerializer)
@@ -118,7 +118,7 @@ class OrderAPIView(BaseModelViewSet):
     @transaction.atomic()
     def payment_confirmation(self, request):
         pk = request.data.get('order_id')
-        order = Order.objects.filter(is_active=True, is_pay=False, id__in=pk)
+        order = Order.objects.filter(is_pay=False, id__in=pk)
 
         if len(pk) != order.count():
             raise serializers.ValidationError('Those orders were payment')
@@ -152,5 +152,5 @@ class RevenueAPIView(ListModelMixin,
     }
 
     def get_queryset(self):
-        queryset = Revenue.objects.filter(is_active=True)
+        queryset = Revenue.objects.all()
         return queryset

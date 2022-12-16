@@ -31,17 +31,17 @@ class TimeSheetAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        return TimeSheet.objects.filter(is_active=True)
+        return TimeSheet.objects.filter()
 
     @transaction.atomic()
     @swagger_auto_schema(request_body=DeleteSerialize)
     @action(methods=['DELETE'], detail=False)
     def delete(self, request):
         pk = request.data['pk']
-        timesheet = TimeSheet.objects.filter(is_active=True, id__in=pk)
+        timesheet = TimeSheet.objects.filter(id__in=pk)
         if timesheet.count() != len(pk):
             raise NotFound()
 
-        timesheet.update(is_active=False)
+        timesheet.delete()
 
         return Response()

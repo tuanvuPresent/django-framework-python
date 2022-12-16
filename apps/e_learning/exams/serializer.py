@@ -26,7 +26,6 @@ class ListExamConfigSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ['id', 'name', 'quantity_question', 'time', 'form', 'recreate_question', 'show_random_question',
-                  'is_active',
                   'config']
         model = ExamConfiguration
 
@@ -47,7 +46,7 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
             category = config_item.get('category_id')
             level = config_item.get('level')
             number = Question.objects.filter(
-                is_active=True, category_id__name=category.name, level=level).count()
+                category_id__name=category.name, level=level).count()
             if number < config_item.get('number'):
                 raise ValidationError(
                     'The number of questions for category {}, level {} cannot be more than {}'.format(
@@ -110,7 +109,7 @@ class ListExamSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ['id', 'name', 'description',
-                  'topic_id', 'exam_config_id', 'is_active']
+                  'topic_id', 'exam_config_id']
         model = Exams
 
 
@@ -125,7 +124,7 @@ class CreateExamSerializer(serializers.ModelSerializer):
         topic_id = validated_data.pop('topic_id')
         name_topic = topic_id.get('name')
         topic, is_created = Topic.objects.get_or_create(
-            name=name_topic, is_active=True)
+            name=name_topic)
         exam = Exams.objects.create(topic_id=topic, **validated_data)
         return exam
 
@@ -133,7 +132,7 @@ class CreateExamSerializer(serializers.ModelSerializer):
         topic_id = validated_data.pop('topic_id')
         name_topic = topic_id.get('name')
         topic, is_created = Topic.objects.get_or_create(
-            name=name_topic, is_active=True)
+            name=name_topic)
         instance = super().update(instance, validated_data)
         instance.topic_id = topic
         instance.save()
@@ -160,7 +159,7 @@ class ListDoExamSerializer(serializers.ModelSerializer):
         return serializer.data
 
     class Meta:
-        fields = ['name', 'description', 'topic_id', 'is_active', 'questions']
+        fields = ['name', 'description', 'topic_id', 'questions']
         model = Exams
 
 

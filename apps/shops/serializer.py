@@ -7,7 +7,7 @@ from apps.shops.models import *
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['name', 'price', 'quantity', 'image', 'description', 'date', 'is_active']
+        fields = ['name', 'price', 'quantity', 'image', 'description', 'date']
         model = Product
 
 
@@ -31,7 +31,7 @@ class ListProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ['id', 'name', 'price', 'sale_off', 'quantity', 'image', 'description', 'number_of_view', 'date',
-                  'is_active', 'type_id']
+                'type_id']
         model = Product
 
 
@@ -39,13 +39,13 @@ class CreateProductSerializer(serializers.ModelSerializer):
     type_id = TypeProductSerialize()
 
     class Meta:
-        fields = ['name', 'price', 'sale_off', 'quantity', 'image', 'description', 'date', 'is_active', 'type_id']
+        fields = ['name', 'price', 'sale_off', 'quantity', 'image', 'description', 'date', 'type_id']
         model = Product
 
     def create(self, validated_data):
         type_id = validated_data.pop('type_id')
         name_type = type_id.get('name')
-        type_product, is_create = TypeProduct.objects.get_or_create(name=name_type, is_active=True)
+        type_product, is_create = TypeProduct.objects.get_or_create(name=name_type)
         product = Product.objects.create(type_id=type_product, **validated_data)
         return product
 
@@ -177,7 +177,7 @@ class ListRevenueSerializer(serializers.ModelSerializer):
         }
 
     def get_detail(self, instance):
-        queryset = Order.objects.filter(is_active=True, is_pay=True, date_pay=instance.date)
+        queryset = Order.objects.filter(is_pay=True, date_pay=instance.date)
         serializer = ListOrderSerializer(queryset, many=True)
         return serializer.data
 

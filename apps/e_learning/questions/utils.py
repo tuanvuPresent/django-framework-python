@@ -13,7 +13,7 @@ def update_exams(questions, exams):
 
 def update_exam_config(questions, exams):
     for exam in exams:
-        configs = Configuration.objects.filter(is_active=True, exam_config_id=exam.pk)
+        configs = Configuration.objects.filter(exam_config_id=exam.pk)
         for question_item in questions:
             configuration = configs.filter(category_id=question_item.category_id, level=question_item.level).first()
             if configuration is not None:

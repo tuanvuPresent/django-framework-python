@@ -33,7 +33,7 @@ class TodoAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        return Todo.objects.filter(is_active=True).filter(user_id=self.request.user.id)
+        return Todo.objects.all().filter(user_id=self.request.user.id)
 
     @swagger_auto_schema(request_body=DeleteSerialize)
     @action(methods=['DELETE'], detail=False)
@@ -43,8 +43,8 @@ class TodoAPIView(BaseModelViewSet):
         if type(user) == AnonymousUser:
             raise NotAuthenticated
         pk = request.data.get('pk')
-        todo = Todo.objects.filter(id__in=pk, is_active=True, user_id=user)
+        todo = Todo.objects.filter(id__in=pk, user_id=user)
         if todo.count() != len(pk):
             raise Http404
-        todo.update(is_active=False)
+        todo.delete()
         return Response()

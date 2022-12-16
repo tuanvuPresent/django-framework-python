@@ -43,7 +43,7 @@ class ExamAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Exams.objects.filter(is_active=True).select_related('exam_config_id').select_related('topic_id')
+        queryset = Exams.objects.all().select_related('exam_config_id').select_related('topic_id')
         return queryset
 
     @transaction.atomic()
@@ -51,10 +51,10 @@ class ExamAPIView(BaseModelViewSet):
     @action(methods=['delete'], detail=False)
     def delete(self, request):
         pk = request.data.get('pk')
-        exams = Exams.objects.filter(is_active=True, id__in=pk)
+        exams = Exams.objects.filter(id__in=pk)
         if exams.count() != len(pk):
             raise Http404
-        exams.update(is_active=False)
+        exams.delete()
         return Response()
 
 
@@ -84,10 +84,10 @@ class ConfigExamAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        return ExamConfiguration.objects.filter(is_active=True).prefetch_related(
+        return ExamConfiguration.objects.all().prefetch_related(
             Prefetch(
                 'config',
-                queryset=Configuration.objects.filter(is_active=True),
+                queryset=Configuration.objects.all(),
             )
         )
 
@@ -96,11 +96,11 @@ class ConfigExamAPIView(BaseModelViewSet):
     @action(methods=['delete'], detail=False)
     def delete(self, request):
         pk = request.data.get('pk')
-        exam_config = ExamConfiguration.objects.filter(is_active=True, id__in=pk)
+        exam_config = ExamConfiguration.objects.filter(id__in=pk)
         if exam_config.count() != len(pk):
             raise Http404
-        exam_config.update(is_active=False)
-        Exams.objects.filter(is_active=True, exam_config_id__in=pk).update(is_active=False)
+        exam_config.delete()
+        Exams.objects.filter(exam_config_id__in=pk).delete()
         return Response()
 
 
@@ -121,7 +121,7 @@ class DoExamAPIView(RetrieveModelMixin,
     }
 
     def get_queryset(self):
-        return Exams.objects.filter(is_active=True).select_related('topic_id').select_related('exam_config_id')
+        return Exams.objects.all().select_related('topic_id').select_related('exam_config_id')
 
     @transaction.atomic()
     @swagger_auto_schema(request_body=DoExamSerializer)
@@ -153,6 +153,6 @@ class DoExamAPIView(RetrieveModelMixin,
 
     @action(methods=['get'], detail=False)
     def history(self, request):
-        data = HistoryExam.objects.filter(is_active=True).filter(user_id=request.user)
+        data = HistoryExam.objects.filter(user_id=request.user)
         serializer = self.get_serializer(data, many=True)
         return Response(serializer.data)
