@@ -1,8 +1,8 @@
 # Create your views here.
 from rest_framework.viewsets import ModelViewSet
 
-from api.webhook.models import WebhookTarget
-from api.webhook.serializer import WebhookTargetSerializer
+from apps.webhook.models import WebhookTarget
+from apps.webhook.serializer import WebhookTargetSerializer
 
 
 class HookViewSet(ModelViewSet):

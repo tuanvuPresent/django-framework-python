@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.webhook.models import WebhookTarget
+from apps.webhook.models import WebhookTarget
 
 
 class WebhookTargetSerializer(serializers.ModelSerializer):

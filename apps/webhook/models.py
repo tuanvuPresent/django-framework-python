@@ -1,10 +1,11 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
+from apps.common.models import UuidModel
+from apps.webhook.signals import raw_hook_event
+from apps.webhook.tasks import deliver_hook_event
 
-from api.core.model import UuidModel
-from api.webhook.signals import raw_hook_event
-from api.webhook.tasks import deliver_hook_event
+User = get_user_model()
 
 
 class WebhookTarget(UuidModel):

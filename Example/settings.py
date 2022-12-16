@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.paypal',
     'apps.upfile',
     'apps.exportfile',
+    'apps.webhook',
     'apps',
 
     'rest_pyotp',
