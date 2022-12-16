@@ -1,7 +1,7 @@
 [
   {
     "model": "account.user",
-    "pk": 1,
+    "pk": 75089289163047937,
     "fields": {
       "password": "pbkdf2_sha256$180000$OFJXSF4JZomc$VC0JokJyMPdaw2ki0ZGbAU6gFWh6tZgysJUViTJ1lxU=",
       "last_login": null,
@@ -11,10 +11,10 @@
       "date_joined": "2020-05-22 15:26:03.748216",
       "username": "admin",
       "email": "admin@gmail.com",
-      "user_type": "admin",
+      "user_type": 0,
       "is_staff": "1",
       "is_active": "1",
-      "gender": "Male"
+      "gender": 0
     }
   }
 ]
