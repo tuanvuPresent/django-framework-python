@@ -3,7 +3,7 @@ import random
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from apps.account.constant import GENDER_CHOICES, MALE, USER_TYPE, STAFF
+from apps.account.constant import GenderType, UserType
 from apps.common.models import BaseModel, UuidModel
 
 
@@ -11,9 +11,9 @@ from apps.common.models import BaseModel, UuidModel
 class User(UuidModel, AbstractUser):
     username = models.CharField(max_length=64, unique=True)
     email = models.EmailField(max_length=64, unique=True, null=True)
-    user_type = models.CharField(choices=USER_TYPE, default=STAFF, max_length=8)
+    user_type = models.IntegerField(choices=UserType.choices(), default=UserType.STAFF.value)
     is_staff = models.BooleanField(default=False)
-    gender = models.CharField(max_length=8, choices=GENDER_CHOICES, default=MALE)
+    gender = models.IntegerField(choices=GenderType.choices(), default=GenderType.MALE.value)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verify_email = models.BooleanField(default=False)
@@ -35,6 +35,7 @@ class User(UuidModel, AbstractUser):
 
 
 class UserProfile(UuidModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile')
     dob = models.DateField()
     address = models.CharField(max_length=255)

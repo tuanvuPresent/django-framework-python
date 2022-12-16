@@ -10,7 +10,7 @@ from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import MissingBackend, AuthTokenError
 from social_django.utils import load_strategy, load_backend
 
-from apps.auth.jwt.v1.models import RevokedToken
+from apps.auth.jwt.models import RevokedToken
 from apps.auth.jwt.v3.serializer import  ResetPasswordSerializer3, \
     ResetPasswordCompleteSerializer3, CheckResetPasswordSerializer3
 from apps.common.jwt_handle import jwt_payload_handler, jwt_encode_handler

@@ -5,7 +5,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
-from apps.auth.jwt.v1.models import RevokedToken
+from apps.auth.jwt.models import RevokedToken
 from apps.common.jwt_handle import jwt_decode_handler
 
 

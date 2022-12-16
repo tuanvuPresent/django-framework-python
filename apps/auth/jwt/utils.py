@@ -7,7 +7,7 @@ from django.utils.crypto import constant_time_compare
 from django.utils.encoding import force_bytes
 from django.utils.http import base36_to_int, urlsafe_base64_encode, urlsafe_base64_decode
 
-from apps.auth.jwt.v1.models import ResetPasswordReferent
+from apps.auth.jwt.models import ResetPasswordReferent
 from apps.common.jwt_handle import jwt_encode_handler, jwt_decode_handler
 
 

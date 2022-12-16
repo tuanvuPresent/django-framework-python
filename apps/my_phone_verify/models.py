@@ -1,9 +1,9 @@
 from django.db import models
-
+from apps.common.models import UuidModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class Phone(models.Model):
+class Phone(UuidModel):
     security_code = models.CharField(max_length=64)
     session_token = models.CharField(max_length=500)
     phone_number = PhoneNumberField()

@@ -1,14 +1,14 @@
 from django.db import models
 from enum import Enum
 from apps.account.models import User
-from apps.common.models import BaseModel, UuidModel
+from apps.common.models import UuidModel
 
 
-class TypeProduct(BaseModel):
+class TypeProduct(UuidModel):
     name = models.CharField(max_length=64)
 
 
-class Product(BaseModel):
+class Product(UuidModel):
     type_id = models.ForeignKey(
         TypeProduct, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=64, unique=True)
@@ -21,7 +21,7 @@ class Product(BaseModel):
     sale_off = models.IntegerField(default=0)
 
 
-class Promotion(BaseModel):
+class Promotion(UuidModel):
     product_id = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='promotion_product')
     date_start = models.DateTimeField()
@@ -29,7 +29,7 @@ class Promotion(BaseModel):
     discount = models.CharField(max_length=64)
 
 
-class Order(BaseModel):
+class Order(UuidModel):
     user_order = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='user_order')
     address = models.CharField(max_length=64)
@@ -43,7 +43,7 @@ class Order(BaseModel):
         ordering = ['-created_date']
 
 
-class OrderDetail(BaseModel):
+class OrderDetail(UuidModel):
     order_id = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name='order_detail')
     product_id = models.ForeignKey(
@@ -53,7 +53,7 @@ class OrderDetail(BaseModel):
     amount = models.CharField(max_length=64, null=True)
 
 
-class Revenue(BaseModel):
+class Revenue(UuidModel):
     date = models.DateField(auto_now_add=True)
     total = models.CharField(max_length=64, default=None, null=True)
 
@@ -74,20 +74,9 @@ class AttributeProduct(UuidModel):
     type_value = models.SmallIntegerField(choices=[(
         item.value, item.value) for item in ValueType], default=ValueType.STR.value)
 
-
-class IntegerValue(UuidModel):
+    
+class ValueEntity(UuidModel):
     entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
     attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
-    value = models.IntegerField()
-
-
-class BooleanValue(UuidModel):
-    entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
-    value = models.BooleanField()
-
-
-class IntegerValue(UuidModel):
-    entity = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(AttributeProduct, on_delete=models.CASCADE)
-    value = models.CharField(max_length=255)
+    int_value = models.IntegerField()
+    str_value = models.CharField(max_length=255)

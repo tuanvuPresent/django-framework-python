@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from Example import settings
-from apps.e_learning.exams.constant import ANSWERS_CHOICE
+from apps.e_learning.exams.constant import AnswersType
 from apps.e_learning.exams.models import Exams, ExamConfiguration, Topic, Configuration, HistoryExam
 from apps.e_learning.exams.utils import get_question
 from apps.e_learning.questions.models import Question
@@ -46,7 +46,8 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
             quantity = quantity + config_item.get('number')
             category = config_item.get('category_id')
             level = config_item.get('level')
-            number = Question.objects.filter(is_active=True, category_id__name=category.name, level=level).count()
+            number = Question.objects.filter(
+                is_active=True, category_id__name=category.name, level=level).count()
             if number < config_item.get('number'):
                 raise ValidationError(
                     'The number of questions for category {}, level {} cannot be more than {}'.format(
@@ -55,7 +56,8 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
 
         if quantity != data.get('quantity_question'):
             raise ValidationError(
-                'quantity_question = {} is invalid'.format(data.get('quantity_question'))
+                'quantity_question = {} is invalid'.format(
+                    data.get('quantity_question'))
             )
         return data
 
@@ -75,7 +77,8 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
                 list_config.append(item)
 
         if len(data) != len(list_config):
-            raise ValidationError('exam configuration with this level and category already exists.')
+            raise ValidationError(
+                'exam configuration with this level and category already exists.')
         return data
 
     def create(self, validated_data):
@@ -93,7 +96,8 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
 
         Configuration.objects.filter(exam_config_id=instance).delete()
-        config_list = [Configuration(exam_config_id=instance, **config_item) for config_item in config_data]
+        config_list = [Configuration(
+            exam_config_id=instance, **config_item) for config_item in config_data]
         Configuration.objects.bulk_create(config_list)
 
         instance.save()
@@ -105,7 +109,8 @@ class ListExamSerializer(serializers.ModelSerializer):
     exam_config_id = ListExamConfigSerializer()
 
     class Meta:
-        fields = ['id', 'name', 'description', 'topic_id', 'exam_config_id', 'is_active']
+        fields = ['id', 'name', 'description',
+                  'topic_id', 'exam_config_id', 'is_active']
         model = Exams
 
 
@@ -119,14 +124,16 @@ class CreateExamSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         topic_id = validated_data.pop('topic_id')
         name_topic = topic_id.get('name')
-        topic, is_created = Topic.objects.get_or_create(name=name_topic, is_active=True)
+        topic, is_created = Topic.objects.get_or_create(
+            name=name_topic, is_active=True)
         exam = Exams.objects.create(topic_id=topic, **validated_data)
         return exam
 
     def update(self, instance, validated_data):
         topic_id = validated_data.pop('topic_id')
         name_topic = topic_id.get('name')
-        topic, is_created = Topic.objects.get_or_create(name=name_topic, is_active=True)
+        topic, is_created = Topic.objects.get_or_create(
+            name=name_topic, is_active=True)
         instance = super().update(instance, validated_data)
         instance.topic_id = topic
         instance.save()
@@ -159,7 +166,7 @@ class ListDoExamSerializer(serializers.ModelSerializer):
 
 class ChildDoExamSerializer(serializers.Serializer):
     question_id = serializers.UUIDField()
-    key = serializers.ChoiceField(choices=ANSWERS_CHOICE)
+    key = serializers.ChoiceField(choices=AnswersType.choices())
 
 
 class DoExamSerializer(serializers.Serializer):
@@ -178,7 +185,8 @@ class HistoryExamSerialize(serializers.ModelSerializer):
         return instance.score / instance.exam_id.exam_config_id.quantity_question * 10
 
     class Meta:
-        fields = ['user_id', 'date', 'exam_id', 'number_of_question_correct', 'number_question', 'score']
+        fields = ['user_id', 'date', 'exam_id',
+                  'number_of_question_correct', 'number_question', 'score']
         model = HistoryExam
         extra_kwargs = {
             'date': {'format': settings.FORMAT_DATETIME}
@@ -187,9 +195,9 @@ class HistoryExamSerialize(serializers.ModelSerializer):
 
 class ResultDoExamSerializer(serializers.Serializer):
     question = serializers.UUIDField()
-    key = serializers.ChoiceField(choices=ANSWERS_CHOICE)
+    key = serializers.ChoiceField(choices=AnswersType.choices())
     is_correct = serializers.BooleanField(default=False)
-    your_answer = serializers.ChoiceField(choices=ANSWERS_CHOICE)
+    your_answer = serializers.ChoiceField(choices=AnswersType.choices())
 
 
 class DetailResultDoExamSerializer(serializers.Serializer):

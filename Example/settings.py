@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'apps.common',
     'apps.account',
-    'apps.auth.jwt.v1',
+    'apps.auth.jwt',
     'apps.e_learning.exams',
     'apps.e_learning.questions',
     'apps.my_phone_verify',

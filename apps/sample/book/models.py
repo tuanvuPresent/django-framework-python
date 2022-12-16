@@ -2,15 +2,15 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from apps.common.uuid_gen import uuid
-from apps.common.models import BaseModel, UuidModel
+from apps.common.models import UuidModel
 
 
 # Create your models here.
-class TypeBook(BaseModel):
+class TypeBook(UuidModel):
     name = models.CharField(max_length=64)
 
 
-class Author(BaseModel):
+class Author(UuidModel):
     name = models.CharField(max_length=64, unique=True)
 
 

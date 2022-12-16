@@ -1,15 +1,15 @@
 from django.db import models
 
 from apps.account.models import User
-from apps.common.models import BaseModel
+from apps.common.models import UuidModel
 
 
 # Create your models here.
-class RevokedToken(BaseModel):
+class RevokedToken(UuidModel):
     token = models.CharField(max_length=256)
 
 
-class ResetPasswordReferent(models.Model):
+class ResetPasswordReferent(UuidModel):
     user_id = models.OneToOneField(User, models.DO_NOTHING, default=None)
     code = models.CharField(max_length=255)
     token = models.CharField(max_length=255)
