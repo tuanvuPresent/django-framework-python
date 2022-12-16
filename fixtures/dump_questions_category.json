@@ -1,9 +1,0 @@
-[
-  {
-    "model": "questions.category",
-    "fields": {
-      "id": "245dc54a468845a5a07d3d836d856b0f",
-      "name": "Math"
-    }
-  }
-]
