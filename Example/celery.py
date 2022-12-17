@@ -3,6 +3,7 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
+from kombu import Queue
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Example.settings')
 app = Celery('Example')
@@ -25,3 +26,10 @@ app.conf.beat_schedule = {
         'schedule': crontab(),
     }
 }
+
+
+app.conf.task_default_queue = 'default'
+app.conf.task_queues = (
+    Queue('default', routing_key='default'),
+    Queue('queue', routing_key='queue'),
+)
