@@ -1,4 +1,4 @@
-from apps.e_learning.exams.models import Configuration
+from apps.e_learning.models.exam import Configuration
 
 
 def update_exams(questions, exams):

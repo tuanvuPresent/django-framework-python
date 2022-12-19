@@ -1,4 +1,4 @@
-from apps.e_learning.questions.models import Question
+from apps.e_learning.models.question import Question
 
 
 def get_score(correct_answer, your_answers):

@@ -3,7 +3,7 @@ from django.db import models
 from apps.account.models import User
 from apps.common.models import UuidModel
 from apps.e_learning.exams.constant import LevelQuestion
-from apps.e_learning.questions.models import Question, Category
+from apps.e_learning.models.question import Question, Category
 
 
 # Create your models here.

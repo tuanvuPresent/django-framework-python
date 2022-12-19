@@ -3,11 +3,11 @@ from rest_framework.exceptions import ValidationError
 
 from Example import settings
 from apps.e_learning.exams.constant import AnswersType
-from apps.e_learning.exams.models import Exams, ExamConfiguration, Topic, Configuration, HistoryExam
+from apps.e_learning.models.exam import Exams, ExamConfiguration, Topic, Configuration, HistoryExam
 from apps.e_learning.exams.utils import get_question
-from apps.e_learning.questions.models import Question
+from apps.e_learning.models.question import Question
 from apps.e_learning.questions.serializer import AnswerSerializer
-
+from apps.e_learning.config_question.serializer import ListExamConfigSerializer
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:

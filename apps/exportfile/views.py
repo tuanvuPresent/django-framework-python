@@ -24,7 +24,7 @@ from apps.exportfile.export_service import ExportService
 from apps.common.custom_model_view_set import BaseGenericViewSet
 from apps.common.serializer import NoneSerializer
 from apps.exportfile.serializer import CVSFileSerializer
-from apps.e_learning.questions.models import Question
+from apps.e_learning.models.question import Question
 from apps.upfile.serializer import FileSerializer
 
 

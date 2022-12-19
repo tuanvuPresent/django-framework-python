@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from apps.common.custom_model_view_set import BaseModelViewSet
 from apps.common.custom_permission import IsAdminUser
 from apps.common.serializer import DeleteSerialize
-from apps.e_learning.exams.models import Exams, Configuration
-from apps.e_learning.questions.models import Question, Answer
+from apps.e_learning.models.exam import Exams, Configuration
+from apps.e_learning.models.question import Question, Answer
 from apps.e_learning.questions.serializer import ListQuestionSerializer, CreateQuestionSerializer
 from apps.e_learning.questions.utils import update_exams, update_exam_config
 

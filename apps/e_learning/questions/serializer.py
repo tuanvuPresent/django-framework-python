@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
 from Example import settings
-from apps.e_learning.exams.models import Category
+from apps.e_learning.models.question import Category
 from apps.e_learning.questions.constant import AnswerNumber
-from apps.e_learning.questions.models import Question, Answer
+from apps.e_learning.models.question import Question, Answer
 
 
 class AnswerSerializer(serializers.ModelSerializer):

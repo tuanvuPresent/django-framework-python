@@ -1,5 +1,5 @@
-from apps.e_learning.exams.models import ExamConfiguration, Configuration
-from apps.e_learning.questions.models import Question
+from apps.e_learning.models.exam import ExamConfiguration, Configuration
+from apps.e_learning.models.question import Question
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
