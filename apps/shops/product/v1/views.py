@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from apps.shops.models import EntityProduct
+from apps.shops.models.product import EntityProduct
 from apps.shops.product.v1.serializers import EntityProductSerializerList
 
 

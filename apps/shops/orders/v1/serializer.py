@@ -1,63 +1,7 @@
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
-
-from Example import settings
-from apps.shops.models import *
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ['name', 'price', 'quantity', 'image', 'description', 'date']
-        model = Product
-
-
-class TypeProductSerialize(serializers.ModelSerializer):
-    class Meta:
-        fields = ['id', 'name']
-        model = TypeProduct
-        read_only_fields = ['id']
-
-
-class ListProductSerializer(serializers.ModelSerializer):
-    type_id = TypeProductSerialize()
-    sale_off = serializers.SerializerMethodField()
-    price = serializers.SerializerMethodField()
-
-    def get_price(self, instance):
-        return '{} {}'.format(instance.price, 'VND')
-
-    def get_sale_off(self, instance):
-        return '{} {}'.format(instance.sale_off, '%')
-
-    class Meta:
-        fields = ['id', 'name', 'price', 'sale_off', 'quantity', 'image', 'description', 'number_of_view', 'date',
-                'type_id']
-        model = Product
-
-
-class CreateProductSerializer(serializers.ModelSerializer):
-    type_id = TypeProductSerialize()
-
-    class Meta:
-        fields = ['name', 'price', 'sale_off', 'quantity', 'image', 'description', 'date', 'type_id']
-        model = Product
-
-    def create(self, validated_data):
-        type_id = validated_data.pop('type_id')
-        name_type = type_id.get('name')
-        type_product, is_create = TypeProduct.objects.get_or_create(name=name_type)
-        product = Product.objects.create(type_id=type_product, **validated_data)
-        return product
-
-    def update(self, instance, validated_data):
-        type_id = validated_data.pop('type_id')
-        name_type = type_id.get('name')
-        instance = super().update(instance, validated_data)
-
-        type_product, is_create = TypeProduct.objects.get_or_create(name=name_type)
-        instance.type_id = type_product
-        instance.save()
-        return instance
+from django.conf import settings
+from apps.shops.models.orders import OrderDetail, Order
 
 
 class OrderDetailSerializer(serializers.ModelSerializer):
@@ -78,7 +22,8 @@ class ListOrderSerializer(serializers.ModelSerializer):
     order_detail = OrderDetailSerializer(many=True)
 
     class Meta:
-        fields = ['id', 'user_order', 'address', 'phone', 'created_date', 'total_amount', 'is_pay', 'order_detail']
+        fields = ['id', 'user_order', 'address', 'phone',
+                  'created_date', 'total_amount', 'is_pay', 'order_detail']
         model = Order
         extra_kwargs = {
             'created_date': {'format': settings.FORMAT_DATETIME}
@@ -89,7 +34,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     order_detail = OrderDetailSerializer(many=True)
 
     class Meta:
-        fields = ['user_order', 'address', 'phone', 'created_date', 'total_amount', 'order_detail']
+        fields = ['user_order', 'address', 'phone',
+                  'created_date', 'total_amount', 'order_detail']
         model = Order
         read_only_fields = ['total_amount']
         extra_kwargs = {
@@ -108,7 +54,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             product_quantity = order_detail_item.get('product_quantity')
             if product_quantity > product.quantity:
                 raise ValidationError(
-                    'product_quantity of product_id {} must <= {}'.format(product.pk, product.quantity)
+                    'product_quantity of product_id {} must <= {}'.format(
+                        product.pk, product.quantity)
                 )
 
         return data
@@ -136,7 +83,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         order_detail_data = validated_data.pop('order_detail')
         order = Order.objects.create(**validated_data)
 
-        order_detail_list = [OrderDetail(order_id=order, **order_detail) for order_detail in order_detail_data]
+        order_detail_list = [OrderDetail(
+            order_id=order, **order_detail) for order_detail in order_detail_data]
         OrderDetail.objects.bulk_create(order_detail_list)
 
         total_amount = 0
@@ -149,7 +97,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         order_detail_data = validated_data.pop('order_detail')
-        instance = super(CreateOrderSerializer, self).update(instance, validated_data)
+        instance = super(CreateOrderSerializer, self).update(
+            instance, validated_data)
 
         OrderDetail.objects.filter(order_id=instance).delete()
         order_detail_list = [OrderDetail(order_id=instance, **order_detail_item) for order_detail_item in
@@ -163,23 +112,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['user_order', 'address', 'phone', 'created_date', 'total_amount']
-
-
-class ListRevenueSerializer(serializers.ModelSerializer):
-    detail = serializers.SerializerMethodField()
-
-    class Meta:
-        fields = ['id', 'date', 'total', 'detail']
-        model = Revenue
-        extra_kwargs = {
-            'date': {'format': settings.FORMAT_DATE}
-        }
-
-    def get_detail(self, instance):
-        queryset = Order.objects.filter(is_pay=True, date_pay=instance.date)
-        serializer = ListOrderSerializer(queryset, many=True)
-        return serializer.data
+        fields = ['user_order', 'address', 'phone',
+                  'created_date', 'total_amount']
 
 
 class PaymentConfirmSerializer(serializers.Serializer):

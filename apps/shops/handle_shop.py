@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 
-from apps.shops.models import OrderDetail
+from apps.shops.models.orders import OrderDetail
 
 
 def update_quantity_product(order):

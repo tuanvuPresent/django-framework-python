@@ -1,5 +1,10 @@
 from datetime import date
 
+from apps.common.custom_model_view_set import BaseModelViewSet
+from apps.common.custom_permission import IsAdminUser, IsUser
+from apps.common.serializer import DeleteSerialize
+from apps.shops.handle_shop import update_quantity_product
+from apps.shops.orders.v1.serializer import *
 from django.db import transaction
 from django.db.models import Prefetch
 from django.http import Http404
@@ -7,56 +12,7 @@ from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
-
-from apps.common.custom_model_view_set import BaseModelViewSet, BaseGenericViewSet
-from apps.common.custom_permission import IsAdminUser, IsUser, IsAdminUserOrIsUserObjects
-from apps.common.serializer import DeleteSerialize
-from apps.shops.handle_shop import update_quantity_product
-from apps.shops.serializer import *
-
-
-# Create your views here.
-@method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))
-class ProductAPIView(BaseModelViewSet):
-    throttle_scope = 'shops.request'
-
-    filter_backends = [SearchFilter, OrderingFilter]
-    ordering_fields = ['number_of_view']
-    ordering = ['-number_of_view']
-    search_fields = ['name']
-
-    serializer_method_classes = {
-        'GET': ListProductSerializer,
-        'POST': CreateProductSerializer,
-        'DELETE': DeleteSerialize,
-        'PUT': CreateProductSerializer,
-        'PATCH': CreateProductSerializer
-    }
-
-    permission_action_classes = {
-        'create': [IsAdminUser],
-        'list': [IsAdminUser],
-        'retrieve': [IsAdminUser],
-        'update': [IsAdminUser],
-        'destroy': [IsAdminUser]
-    }
-
-    def get_queryset(self):
-        queryset = Product.objects.all().select_related('type_id')
-        return queryset
-
-    @transaction.atomic()
-    @swagger_auto_schema(request_body=DeleteSerialize)
-    @action(methods=['delete'], detail=False)
-    def delete(self, request):
-        pk = request.data.get('pk')
-        product = Product.objects.filter(id__in=pk)
-        if product.count() != len(pk):
-            raise Http404
-        product.delete()
-        return Response()
 
 
 @method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))
@@ -130,27 +86,3 @@ class OrderAPIView(BaseModelViewSet):
             update_quantity_product(order_item)
 
         return Response()
-
-
-class RevenueAPIView(ListModelMixin,
-                     RetrieveModelMixin,
-                     BaseGenericViewSet):
-    throttle_scope = 'shops.request'
-
-    filter_backends = [SearchFilter, OrderingFilter]
-    ordering_fields = ['date']
-    ordering = ['date']
-    search_fields = ['date']
-
-    serializer_method_classes = {
-        'GET': ListRevenueSerializer,
-    }
-
-    permission_action_classes = {
-        'list': [IsAdminUser],
-        'retrieve': [IsAdminUser],
-    }
-
-    def get_queryset(self):
-        queryset = Revenue.objects.all()
-        return queryset
