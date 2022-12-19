@@ -43,7 +43,8 @@ class ExamAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Exams.objects.all().select_related('exam_config_id').select_related('topic_id')
+        queryset = Exams.objects.all().select_related(
+            'exam_config_id').select_related('topic_id')
         return queryset
 
     @transaction.atomic()
@@ -55,52 +56,6 @@ class ExamAPIView(BaseModelViewSet):
         if exams.count() != len(pk):
             raise Http404
         exams.delete()
-        return Response()
-
-
-@method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))
-class ConfigExamAPIView(BaseModelViewSet):
-    throttle_scope = 'config_exams.request'
-
-    filter_backends = [SearchFilter, OrderingFilter]
-    ordering_fields = ['name']
-    ordering = ['name']
-    search_fields = ['name']
-
-    serializer_method_classes = {
-        'GET': ListExamConfigSerializer,
-        'POST': CreateExamConfigSerializer,
-        'DELETE': DeleteSerialize,
-        'PUT': CreateExamConfigSerializer,
-        'PATCH': CreateExamConfigSerializer
-    }
-
-    permission_action_classes = {
-        'create': [IsAdminUser],
-        'list': [IsAdminUser],
-        'retrieve': [IsAdminUser],
-        'update': [IsAdminUser],
-        'destroy': [IsAdminUser]
-    }
-
-    def get_queryset(self):
-        return ExamConfiguration.objects.all().prefetch_related(
-            Prefetch(
-                'config',
-                queryset=Configuration.objects.all(),
-            )
-        )
-
-    @transaction.atomic()
-    @swagger_auto_schema(request_body=DeleteSerialize)
-    @action(methods=['delete'], detail=False)
-    def delete(self, request):
-        pk = request.data.get('pk')
-        exam_config = ExamConfiguration.objects.filter(id__in=pk)
-        if exam_config.count() != len(pk):
-            raise Http404
-        exam_config.delete()
-        Exams.objects.filter(exam_config_id__in=pk).delete()
         return Response()
 
 
