@@ -1,11 +1,17 @@
 from django.db import models
 from enum import Enum
 from apps.common.models import UuidModel
+from apps.shops.models.category_product import CategoryProduct
 
 
 class EntityProduct(UuidModel):
     name = models.CharField(max_length=255)
+    price = models.IntegerField()
+    quantity = models.IntegerField()
+    description = models.CharField(max_length=256)
     is_visiable = models.BooleanField(default=False)
+
+    category = models.ForeignKey(CategoryProduct, on_delete=models.CASCADE)
 
 
 class AttributeProduct(UuidModel):
@@ -25,18 +31,7 @@ class ValueEntity(UuidModel):
     str_value = models.CharField(max_length=255)
 
 
-class TypeProduct(UuidModel):
-    name = models.CharField(max_length=64)
-
-
-class Product(UuidModel):
-    type_id = models.ForeignKey(
-        TypeProduct, on_delete=models.CASCADE, related_name='products')
-    name = models.CharField(max_length=64, unique=True)
-    price = models.IntegerField()
-    quantity = models.IntegerField()
-    image = models.CharField(max_length=128, null=True, blank=True)
-    description = models.CharField(max_length=256)
-    date = models.DateField(auto_now_add=True)
-    number_of_view = models.IntegerField(default=0)
-    sale_off = models.IntegerField(default=0)
+class ProductConfig(UuidModel):
+    product = models.ForeignKey(EntityProduct, on_delete=models.CASCADE)
+    product_config = models.ForeignKey(
+        EntityProduct, on_delete=models.CASCADE, related_name='product_config_set', default=None, null=True)

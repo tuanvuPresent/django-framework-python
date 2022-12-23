@@ -5,5 +5,5 @@ from apps.shops.models.category_product import CategoryProduct
 
 class CategoryProductSerialize(serializers.ModelSerializer):
     class Meta:
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'parent_id']
         model = CategoryProduct

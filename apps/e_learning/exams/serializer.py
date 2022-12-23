@@ -76,12 +76,12 @@ class ListDoExamSerializer(serializers.ModelSerializer):
 
 
 class ChildDoExamSerializer(serializers.Serializer):
-    question_id = serializers.UUIDField()
+    question_id = serializers.IntegerField()
     key = serializers.ChoiceField(choices=AnswersType.choices())
 
 
 class DoExamSerializer(serializers.Serializer):
-    exam_id = serializers.UUIDField()
+    exam_id = serializers.IntegerField()
     answers = serializers.ListField(child=ChildDoExamSerializer())
 
 
@@ -105,7 +105,7 @@ class HistoryExamSerialize(serializers.ModelSerializer):
 
 
 class ResultDoExamSerializer(serializers.Serializer):
-    question = serializers.UUIDField()
+    question = serializers.IntegerField()
     key = serializers.ChoiceField(choices=AnswersType.choices())
     is_correct = serializers.BooleanField(default=False)
     your_answer = serializers.ChoiceField(choices=AnswersType.choices())

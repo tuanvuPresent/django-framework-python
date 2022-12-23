@@ -6,13 +6,13 @@ from apps.shops.models.orders import OrderDetail, Order
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ['product_id', 'product_quantity', 'product_price', 'amount']
+        fields = ['product', 'product_quantity', 'product_price', 'amount']
         model = OrderDetail
         read_only_fields = ['product_price', 'amount']
 
     def validate(self, data):
         data = super(OrderDetailSerializer, self).validate(data)
-        product = data.get('product_id')
+        product = data.get('product')
         data['product_price'] = product.price
         data['amount'] = product.price * data.get('product_quantity')
         return data
@@ -50,18 +50,18 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     def validate(self, data):
         order_detail_data = data.get('order_detail')
         for order_detail_item in order_detail_data:
-            product = order_detail_item.get('product_id')
+            product = order_detail_item.get('product')
             product_quantity = order_detail_item.get('product_quantity')
             if product_quantity > product.quantity:
                 raise ValidationError(
-                    'product_quantity of product_id {} must <= {}'.format(
+                    'product_quantity of product {} must <= {}'.format(
                         product.pk, product.quantity)
                 )
 
         return data
 
     def validate_order_detail(self, data):
-        fields = ['product_id']
+        fields = ['product']
         data_copy = []
         for e in data:
             temp = {}
@@ -117,4 +117,4 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class PaymentConfirmSerializer(serializers.Serializer):
-    order_id = serializers.ListField(child=serializers.UUIDField())
+    order_id = serializers.ListField(child=serializers.IntegerField())
