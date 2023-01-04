@@ -32,7 +32,6 @@ schema_view = get_schema_view(openapi.Info(
     contact=openapi.Contact(email="contact@snippets.local"),
     license=openapi.License(name="BSD License"),
 ),
-    url='https://8000-tuanvuprese-djangoframe-yv3pa9ag0yq.ws-us81.gitpod.io/',
     public=True,
     permission_classes=(permissions.AllowAny,), )
 urlpatterns = [

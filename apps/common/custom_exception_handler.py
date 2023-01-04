@@ -100,8 +100,6 @@ def get_full_errors_messages(detail):
 class CustomAPIException(APIException):
     status_code = 400
 
-    def __init__(self, messenger=None, code=None):
+    def __init__(self, message=None, code=None):
         self.code = code
-        if code is not None and code > 300:
-            self.status_code = code
-        super().__init__(detail=messenger, code=code)
+        self.detail = message
