@@ -6,7 +6,6 @@ from apps.e_learning.exams.constant import LevelQuestion
 from apps.e_learning.models.question import Question, Category
 
 
-# Create your models here.
 class Topic(UuidModel):
     name = models.CharField(max_length=64)
 

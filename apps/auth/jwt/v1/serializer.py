@@ -10,7 +10,7 @@ from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
 from apps.common.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
 from ...jwt.v1.tasks import send_mail_reset_password
-from ....common.constant import ErrorCode
+from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
 
 

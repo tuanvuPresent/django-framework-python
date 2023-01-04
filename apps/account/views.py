@@ -1,4 +1,3 @@
-# Create your views here.
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
 from django.http import Http404
@@ -12,7 +11,7 @@ from rest_framework.response import Response
 from apps.account.models import User
 from apps.account.serializer import UserSerializer
 from apps.account.tasks import send_mail_task
-from apps.account.utils import generate_token_register_email, validate_token_verify_email, handle_verify_email
+from apps.account.utils import generate_token_register_email, validate_token_verify_email
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseModelViewSet
 from apps.common.custom_permission import IsAdminUser, IsAdminUserOrIsUserObjects
@@ -78,5 +77,7 @@ class RegisterUserAPIView(BaseModelViewSet):
         user = validate_token_verify_email(token)
         if not user:
             raise CustomAPIException('verify email fail')
-        handle_verify_email(user)
+
+        user.is_verify_email = True
+        user.save()
         return Response(data=None)

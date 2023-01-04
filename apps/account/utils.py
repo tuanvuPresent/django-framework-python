@@ -27,13 +27,9 @@ def validate_token_verify_email(token):
         raise CustomAPIException('Invalid token.')
 
     try:
-        user = User.objects.get(pk=payload.get('id'), email=payload.get('email'))
+        user = User.objects.get(pk=payload.get(
+            'id'), email=payload.get('email'))
     except User.DoesNotExist:
         raise CustomAPIException('Invalid token.')
 
     return user
-
-
-def handle_verify_email(user):
-    user.is_verify_email = True
-    user.save()

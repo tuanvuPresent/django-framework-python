@@ -2,8 +2,8 @@ import graphene
 from graphene_django import DjangoObjectType
 from graphene_django.rest_framework.mutation import SerializerMutation
 
-from apps.sample.book.models import Book, TypeBook, Author
-from apps.sample.book.serializer import BookSerializer
+from apps.sample.models import Book, TypeBook, Author
+from apps.sample.serializer import BookSerializer
 
 
 class TypeBookObjectType(DjangoObjectType):
@@ -24,7 +24,8 @@ class BookObjectType(DjangoObjectType):
 
     class Meta:
         model = Book
-        fields = ["id", "name", "type_book", "date_of_manufacture", "author_book"]
+        fields = ["id", "name", "type_book",
+                  "date_of_manufacture", "author_book"]
 
 
 class CreateOrUpdateBookMutation(SerializerMutation):
@@ -46,7 +47,8 @@ class DeleteBookMutation(graphene.Mutation):
 
 
 class Query(graphene.ObjectType):
-    book_by_name = graphene.Field(BookObjectType, name=graphene.String(required=True))
+    book_by_name = graphene.Field(
+        BookObjectType, name=graphene.String(required=True))
     all_book = graphene.List(BookObjectType)
 
     def resolve_book_by_name(root, info, name):

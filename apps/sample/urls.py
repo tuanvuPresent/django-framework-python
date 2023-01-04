@@ -1,8 +1,10 @@
 from django.conf.urls import url
 from django.urls import include
+from rest_framework import routers
 
-urlpatterns = [
-    url('sample/', include('apps.sample.book.urls')),
-    url('sample/', include('apps.sample.timesheet.urls')),
-    url('sample/', include('apps.sample.todos.urls')),
-]
+from apps.sample import views
+
+router = routers.SimpleRouter()
+router.register('sample/v1/book', views.BookAPIView, basename='sample')
+
+urlpatterns = router.urls

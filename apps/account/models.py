@@ -7,13 +7,14 @@ from apps.account.constant import GenderType, UserType
 from apps.common.models import UuidModel
 
 
-# Create your models here.
 class User(UuidModel, AbstractUser):
     username = models.CharField(max_length=64, unique=True)
     email = models.EmailField(max_length=64, unique=True, null=True)
-    user_type = models.IntegerField(choices=UserType.choices(), default=UserType.STAFF.value)
+    user_type = models.IntegerField(
+        choices=UserType.choices(), default=UserType.STAFF.value)
     is_staff = models.BooleanField(default=False)
-    gender = models.IntegerField(choices=GenderType.choices(), default=GenderType.MALE.value)
+    gender = models.IntegerField(
+        choices=GenderType.choices(), default=GenderType.MALE.value)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verify_email = models.BooleanField(default=False)

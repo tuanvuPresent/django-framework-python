@@ -8,7 +8,6 @@ from apps.auth.authentication.serializer import LoginSerializer, PasswordChangeS
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
 
-# Create your views here.
 class AuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
         'login': LoginSerializer,
@@ -16,7 +15,7 @@ class AuthAPIView(BaseGenericViewSet):
         'reset_password': PasswordResetSerializer,
     }
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['post'], detail=False)
     def logout(self, request):
         user = request.user
         if user.is_authenticated:
@@ -46,20 +45,16 @@ class AuthAPIView(BaseGenericViewSet):
     @action(methods=['post'], detail=False)
     def change_password(self, request):
         data = request.data
-
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
         return Response(data=serializer.data)
 
     @swagger_auto_schema(request_body=PasswordResetSerializer)
     @action(methods=['post'], detail=False, authentication_classes=[])
     def reset_password(self, request):
         data = request.data
-
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
         return Response(data=serializer.data)

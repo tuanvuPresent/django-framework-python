@@ -2,7 +2,7 @@ import re
 
 import requests
 
-from Example import settings
+from django.conf import settings
 
 
 def send_chatwork(message, subject):

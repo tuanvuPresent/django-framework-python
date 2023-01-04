@@ -6,6 +6,4 @@ from apps.account import views
 
 router = routers.SimpleRouter()
 router.register('account', views.RegisterUserAPIView, basename='account')
-urlpatterns = [
-    url('', include(router.urls)),
-]
+urlpatterns = router.urls

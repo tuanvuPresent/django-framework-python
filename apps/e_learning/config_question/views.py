@@ -1,4 +1,3 @@
-# Create your views here.
 from apps.common.custom_model_view_set import BaseModelViewSet
 from apps.common.custom_permission import IsAdminUser
 from apps.common.serializer import DeleteSerialize

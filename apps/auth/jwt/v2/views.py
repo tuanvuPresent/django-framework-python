@@ -17,13 +17,11 @@ from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
 
-# Create your views here.
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
         'reset_password_v2': ResetPasswordSerializer2,
         'reset_password_complete_v2': ResetPasswordCompleteSerializer,
     }
-
 
     @action(methods=['post'], detail=False, url_path='reset-pass-2', authentication_classes=[])
     @swagger_auto_schema(request_body=ResetPasswordSerializer2)

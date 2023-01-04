@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-# Create your views here.
 from fcm_django.models import FCMDevice
 from rest_framework.decorators import action
 from rest_framework.response import Response

@@ -8,16 +8,17 @@ from apps.common.custom_authentication import JWTAuthentication
 from apps.common.serializer import NoneSerializer
 
 
-class Response:
-    status = True
-    messenger = 'success'
-    data = None
+class BaseResponse:
 
-    def __init__(self, data):
+    def __init__(self, status=True, code=0, message=None, data=None):
+        self.status = status
+        self.code = code
+        self.message = message
         self.data = {
             'status': self.status,
-            'messenger': self.messenger,
-            'data': data
+            'code': self.code,
+            'message': self.message,
+            'data': data,
         }
 
 
@@ -52,7 +53,7 @@ class BaseGenericViewSet(GenericViewSet):
 
     def finalize_response(self, request, response, *args, **kwargs):
         if not response.exception:
-            response.data = Response(data=response.data).data
+            response.data = BaseResponse(data=response.data).data
 
         return super().finalize_response(request, response, args, kwargs)
 

@@ -18,7 +18,6 @@ from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
 
-# Create your views here.
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
         'reset_password_v3': ResetPasswordSerializer3,

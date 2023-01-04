@@ -4,7 +4,6 @@ from apps.common.models import UuidModel
 from apps.e_learning.exams.constant import LevelQuestion, AnswersType
 
 
-# Create your models here.
 class Category(UuidModel):
     name = models.CharField(max_length=64)
 

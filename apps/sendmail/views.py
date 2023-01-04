@@ -7,7 +7,6 @@ from apps.sendmail.serializer import SendEmailSerializer
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
 
-# Create your views here.
 class SendEmailAPIView(BaseGenericViewSet):
 
     @swagger_auto_schema(request_body=SendEmailSerializer)

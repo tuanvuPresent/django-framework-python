@@ -1,4 +1,3 @@
-# Create your views here.
 from rest_framework.viewsets import ModelViewSet
 
 from apps.webhook.models import WebhookTarget

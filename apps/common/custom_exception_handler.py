@@ -3,8 +3,8 @@ import logging
 from rest_framework.exceptions import APIException, ErrorDetail
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
-
-from apps.common.constant import ErrorCode, Error
+from apps.common.custom_model_view_set import BaseResponse
+from apps.common.constant import ErrorMessage
 
 
 def custom_exception_handler(exc, context):
@@ -15,38 +15,38 @@ def custom_exception_handler(exc, context):
         status_code = response.status_code
         detail = None
         if exc_class == 'ValidationError':
-            error = ErrorCode.UNKNOWN_ERROR
+            error = ErrorMessage.UNKNOWN_ERROR
             detail = get_full_errors_messages(response.data)
         elif exc_class == "CustomAPIException":
             error = exc.detail
         elif exc_class == "AuthenticationFailed":
-            error = ErrorCode.INVALID_AUTH
+            error = ErrorMessage.INVALID_AUTH
         elif exc_class == "NotAuthenticated":
-            error = ErrorCode.NOT_AUTH
+            error = ErrorMessage.NOT_AUTH
         elif exc_class == "PermissionDenied":
-            error = ErrorCode.NOT_PERMISSION
+            error = ErrorMessage.NOT_PERMISSION
         elif exc_class == "Throttled":
-            error = ErrorCode.THROTTLED_REQUEST
+            error = ErrorMessage.THROTTLED_REQUEST
         elif exc_class == "Http404":
-            error = ErrorCode.NOT_FOUND
+            error = ErrorMessage.NOT_FOUND
         elif exc_class == "MethodNotAllowed":
-            error = ErrorCode.NOT_ALLOW_METHOD
+            error = ErrorMessage.NOT_ALLOW_METHOD
         else:
-            error = ErrorCode.UNKNOWN_ERROR
+            error = ErrorMessage.UNKNOWN_ERROR
             detail = str(exc)
 
     else:
         detail = str(exc)
-        error = ErrorCode.UNKNOWN_ERROR
+        error = ErrorMessage.UNKNOWN_ERROR
         status_code = 500
 
         logger.error(exc)
-    return Response({
-        'status': False,
-        'messenger': error[Error.message],
-        'code': error[Error.code],
-        'detail': detail
-    }, status=status_code)
+    return Response(BaseResponse(
+        status=False,
+        message=error.message,
+        code=error.code,
+        data=detail
+    ).data, status=status_code)
 
 
 def get_errors_code(detail):

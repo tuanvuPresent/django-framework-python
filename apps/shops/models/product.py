@@ -8,7 +8,7 @@ class EntityProduct(UuidModel):
     name = models.CharField(max_length=255)
     price = models.IntegerField()
     quantity = models.IntegerField()
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=256, null=True)
     is_visiable = models.BooleanField(default=False)
 
     category = models.ForeignKey(CategoryProduct, on_delete=models.CASCADE)

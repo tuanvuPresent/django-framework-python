@@ -6,6 +6,4 @@ from apps.auth.jwt.v3 import views
 
 router = routers.DefaultRouter()
 router.register('jwt/auth', views.JWTAuthAPIView, basename='jwt_auth')
-urlpatterns = [
-    url('', include(router.urls)),
-]
+urlpatterns = router.urls

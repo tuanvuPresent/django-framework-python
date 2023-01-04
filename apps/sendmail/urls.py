@@ -6,6 +6,4 @@ from apps.sendmail import views
 
 router = routers.SimpleRouter()
 router.register('sendmail', views.SendEmailAPIView, basename='sendmail')
-urlpatterns = [
-    url('', include(router.urls))
-]
+urlpatterns = router.urls

@@ -5,8 +5,6 @@ import time
 from django.utils.baseconv import base62
 from apps.common.models import UuidModel
 
-# Create your models here.
-
 
 def directory_path(instance, filename):
     stamp = int(time.time() * 1000)

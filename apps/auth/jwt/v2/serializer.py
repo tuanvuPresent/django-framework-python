@@ -10,7 +10,7 @@ from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
 from ....common.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
 from .tasks import send_mail_reset_password_v2
-from ....common.constant import ErrorCode
+from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
 
 
@@ -22,9 +22,9 @@ class ResetPasswordSerializer2(serializers.Serializer):
         token_generator = CustomEmailVerifyTokenGenerator()
         user = User.objects.filter(email=email).first()
         if not email or email == "":
-            raise CustomAPIException(ErrorCode.EMAIL_REQUIRED)
+            raise CustomAPIException(ErrorMessage.EMAIL_REQUIRED)
         if not user:
-            raise CustomAPIException(ErrorCode.EMAIL_NOT_EXIST)
+            raise CustomAPIException(ErrorMessage.EMAIL_NOT_EXIST)
 
         time_token = datetime.now().timestamp()
         code = token_generator.make_code(user, time_token)
@@ -44,15 +44,15 @@ class ResetPasswordCompleteSerializer(serializers.Serializer):
         new_password = attrs.get('new_password')
 
         if not code or code == "":
-            raise CustomAPIException(ErrorCode.RESET_PASSWORD_CODE_REQUIRED)
+            raise CustomAPIException(ErrorMessage.RESET_PASSWORD_CODE_REQUIRED)
         if not new_password or new_password == "":
-            raise CustomAPIException(ErrorCode.PASSWORD_REQUIRED)
+            raise CustomAPIException(ErrorMessage.PASSWORD_REQUIRED)
 
         token_generator = CustomEmailVerifyTokenGenerator()
         is_valid, user = token_generator.check_token(session_token)
         if not is_valid:
-            raise CustomAPIException(ErrorCode.RESET_PASSWORD_TOKEN_INVALID)
+            raise CustomAPIException(ErrorMessage.RESET_PASSWORD_TOKEN_INVALID)
         if not token_generator.check_code(user=user, code=code):
-            raise CustomAPIException(ErrorCode.RESET_PASSWORD_CODE_INVALID)
+            raise CustomAPIException(ErrorMessage.RESET_PASSWORD_CODE_INVALID)
         return {'user': user, 'new_password': attrs.get('new_password')}
 

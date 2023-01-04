@@ -4,7 +4,6 @@ from apps.account.models import User
 from apps.common.models import UuidModel
 
 
-# Create your models here.
 class RevokedToken(UuidModel):
     token = models.CharField(max_length=256)
 

@@ -10,7 +10,7 @@ from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
 from ....common.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
 from .tasks import send_mail_reset_password_v3
-from ....common.constant import ErrorCode
+from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
 
 class ResetPasswordSerializer3(serializers.Serializer):
@@ -20,9 +20,9 @@ class ResetPasswordSerializer3(serializers.Serializer):
         email = attrs.get('email')
         user = User.objects.filter(email=email).first()
         if not email or email == "":
-            raise CustomAPIException(ErrorCode.EMAIL_REQUIRED)
+            raise CustomAPIException(ErrorMessage.EMAIL_REQUIRED)
         if not user:
-            raise CustomAPIException(ErrorCode.EMAIL_NOT_EXIST)
+            raise CustomAPIException(ErrorMessage.EMAIL_NOT_EXIST)
 
         token = CustomPasswordResetTokenGenerator().make_token(user)
         uid = CustomPasswordResetTokenGenerator().make_uid(user)
@@ -38,13 +38,13 @@ class CheckResetPasswordSerializer3(serializers.Serializer):
         token = attrs.get('token')
         uid = attrs.get('uid')
         if not token or token == "":
-            raise CustomAPIException(ErrorCode.TOKEN_REQUIRED)
+            raise CustomAPIException(ErrorMessage.TOKEN_REQUIRED)
         if not uid or uid == "":
-            raise CustomAPIException(ErrorCode.UID_REQUIRED)
+            raise CustomAPIException(ErrorMessage.UID_REQUIRED)
         uid = CustomPasswordResetTokenGenerator().decode_uid(uid)
         user = User.objects.filter(id=uid).first()
         if not CustomPasswordResetTokenGenerator().check_token(user, token):
-            raise CustomAPIException(ErrorCode.LINK_RESET_PASS_INVALID)
+            raise CustomAPIException(ErrorMessage.LINK_RESET_PASS_INVALID)
         attrs['user'] = user
         return attrs
 
@@ -56,7 +56,7 @@ class ResetPasswordCompleteSerializer3(CheckResetPasswordSerializer3):
         attrs = super().validate(attrs)
         new_password = attrs.get('new_password')
         if not new_password or new_password == "":
-            raise CustomAPIException(ErrorCode.PASSWORD_REQUIRED)
+            raise CustomAPIException(ErrorMessage.PASSWORD_REQUIRED)
 
         user = attrs.get('user')
         user.set_password(new_password)

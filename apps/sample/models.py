@@ -5,7 +5,6 @@ from apps.common.uuid_gen import uuid
 from apps.common.models import UuidModel
 
 
-# Create your models here.
 class TypeBook(UuidModel):
     name = models.CharField(max_length=64)
 
@@ -16,9 +15,11 @@ class Author(UuidModel):
 
 class Book(UuidModel):
     name = models.CharField(max_length=64, unique=True)
-    type_book = models.ForeignKey(TypeBook, on_delete=models.CASCADE, related_name='type_book')
+    type_book = models.ForeignKey(
+        TypeBook, on_delete=models.CASCADE, related_name='type_book')
     date_of_manufacture = models.DateTimeField()
-    author_book = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='author_book', null=True)
+    author_book = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name='author_book', null=True)
 
 
 @receiver(signal=post_save, sender=Book)

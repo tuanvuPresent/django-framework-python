@@ -6,6 +6,4 @@ from apps.auth.authentication import views
 
 router = routers.DefaultRouter()
 router.register('auth', views.AuthAPIView, basename='auth')
-urlpatterns = [
-    url('', include(router.urls)),
-]
+urlpatterns = router.urls

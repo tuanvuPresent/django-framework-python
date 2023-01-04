@@ -18,7 +18,6 @@ from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
 
-# Create your views here.
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
         'login': JWTLoginSerializer,
@@ -28,7 +27,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
         'reset_password': JWTPasswordResetSerializer,
     }
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['post'], detail=False)
     def logout(self, request):
         if request.user.is_authenticated:
             auth = get_authorization_header(request).split()
