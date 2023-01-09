@@ -8,7 +8,6 @@ from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
-from ....common.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
 from .tasks import send_mail_reset_password_v2
 from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException

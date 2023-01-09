@@ -8,7 +8,7 @@ from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
-from apps.common.jwt_handle import jwt_decode_handler, jwt_payload_handler, jwt_encode_handler
+from apps.common.jwt_handle import RefreshJwtTokenGenerator
 from ...jwt.v1.tasks import send_mail_reset_password
 from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
@@ -58,7 +58,8 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
     def validate(self, attrs):
         token = attrs.get('token')
         try:
-            payload = jwt_decode_handler(token)
+            token_generator = RefreshJwtTokenGenerator()
+            payload = token_generator.verify_refresh_token(token)
         except ExpiredSignatureError:
             raise AuthenticationFailed('Token Expired!')
         except DecodeError:
@@ -66,27 +67,14 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
         except Exception:
             raise AuthenticationFailed('Invalid token.')
 
-        try:
-            user = User.objects.get(pk=payload.get('user_id'))
-        except User.DoesNotExist:
+
+        user = User.objects.filter(pk=token_generator.user_id).first()
+        if not user:
             raise AuthenticationFailed('No user matching this token was found.')
 
-        orig_iat = payload.get('orig_iat')
-        if api_settings.JWT_ALLOW_REFRESH:
-            refresh_limit = api_settings.JWT_REFRESH_EXPIRATION_DELTA.total_seconds()
-
-            expiration_timestamp = orig_iat + int(refresh_limit)
-            now_timestamp = datetime.now().astimezone().timestamp()
-            if now_timestamp > expiration_timestamp:
-                raise CustomAPIException('Refresh has expired.')
-        else:
-            raise CustomAPIException('Not allow refresh.')
-
-        new_payload = jwt_payload_handler(user)
-        new_payload['orig_iat'] = orig_iat
         return {
             'user': user,
-            'token': jwt_encode_handler(new_payload)
+            'token': RefreshJwtTokenGenerator().get_token(user)
         }
 
 

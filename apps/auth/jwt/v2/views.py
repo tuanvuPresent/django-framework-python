@@ -12,7 +12,6 @@ from social_django.utils import load_strategy, load_backend
 
 from apps.auth.jwt.models import RevokedToken
 from apps.auth.jwt.v2.serializer import ResetPasswordCompleteSerializer, ResetPasswordSerializer2
-from apps.common.jwt_handle import jwt_payload_handler, jwt_encode_handler
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 

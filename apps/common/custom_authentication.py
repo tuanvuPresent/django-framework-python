@@ -6,7 +6,7 @@ from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
 from apps.auth.jwt.models import RevokedToken
-from apps.common.jwt_handle import jwt_decode_handler
+from apps.common.jwt_handle import JwtTokenGenerator
 
 
 class JWTAuthentication(JSONWebTokenAuthentication):
@@ -47,7 +47,8 @@ class JWTAuthentication(JSONWebTokenAuthentication):
 
     def authenticate_credentials(self, token):
         try:
-            payload = jwt_decode_handler(token)
+            token_generator = JwtTokenGenerator()
+            payload = token_generator.verify_token(token)
         except ExpiredSignatureError:
             raise AuthenticationFailed('Token Expired!')
         except DecodeError:
@@ -55,12 +56,21 @@ class JWTAuthentication(JSONWebTokenAuthentication):
         except Exception:
             raise AuthenticationFailed('Invalid token.')
 
-        try:
-            user = User.objects.get(pk=payload.get('user_id'))
-        except User.DoesNotExist:
-            raise AuthenticationFailed('No user matching this token was found.')
-
-        if RevokedToken.objects.filter(token=token).first():
+        if self.is_revoked():
             raise AuthenticationFailed('Invalid token.')
 
-        return user, token
+        return self.get_stateless_user(token_generator), token
+
+    def get_user(self, token_generator):
+        try:
+            return User.objects.get(pk=token_generator.user_id)
+        except User.DoesNotExist:
+            raise AuthenticationFailed(
+                'No user matching this token was found.')
+
+    def get_stateless_user(self, token_generator):
+        return User(id=token_generator.user_id, username=token_generator.username)
+
+    def is_revoked(self):
+        # options
+        return False

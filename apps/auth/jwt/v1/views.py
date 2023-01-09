@@ -13,7 +13,7 @@ from social_django.utils import load_strategy, load_backend
 from apps.auth.jwt.models import RevokedToken
 from apps.auth.jwt.v1.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
     JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer
-from apps.common.jwt_handle import jwt_payload_handler, jwt_encode_handler
+from apps.common.jwt_handle import JwtTokenGenerator
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
 
@@ -48,8 +48,7 @@ class JWTAuthAPIView(BaseGenericViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
 
-        payload = jwt_payload_handler(user)
-        token = jwt_encode_handler(payload)
+        token = JwtTokenGenerator().get_token(user)
         data = {
             'token': token,
             'user_id': user.pk,
@@ -136,8 +135,7 @@ class AuthSocialView(BaseGenericViewSet):
         except AuthTokenError:
             raise CustomAPIException('Invalid credentials')
 
-        payload = jwt_payload_handler(user)
-        token = jwt_encode_handler(payload)
+        token = JwtTokenGenerator().get_token(user)
         data = {
             "email": user.email,
             "username": user.username,
