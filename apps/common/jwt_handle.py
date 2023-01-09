@@ -68,7 +68,7 @@ class JwtTokenGenerator:
         return self.payload.get('iat')
 
 
-class RefreshJwtTokenGenerator(JwtTokenGenerator):
+class JwtRefreshTokenGenerator(JwtTokenGenerator):
     def verify_refresh_token(self, token):
         self.payload = jwt.decode(
             token,

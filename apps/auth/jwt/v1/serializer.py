@@ -8,7 +8,7 @@ from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
 from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
-from apps.common.jwt_handle import RefreshJwtTokenGenerator
+from apps.common.jwt_handle import JwtRefreshTokenGenerator
 from ...jwt.v1.tasks import send_mail_reset_password
 from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
@@ -58,7 +58,7 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
     def validate(self, attrs):
         token = attrs.get('token')
         try:
-            token_generator = RefreshJwtTokenGenerator()
+            token_generator = JwtRefreshTokenGenerator()
             payload = token_generator.verify_refresh_token(token)
         except ExpiredSignatureError:
             raise AuthenticationFailed('Token Expired!')
@@ -74,7 +74,7 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
 
         return {
             'user': user,
-            'token': RefreshJwtTokenGenerator().get_token(user)
+            'token': JwtRefreshTokenGenerator().get_token(user)
         }
 
 
