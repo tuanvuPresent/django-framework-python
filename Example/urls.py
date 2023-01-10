@@ -32,8 +32,11 @@ schema_view = get_schema_view(openapi.Info(
     contact=openapi.Contact(email="contact@snippets.local"),
     license=openapi.License(name="BSD License"),
 ),
+    url='https://8000-tuanvuprese-djangoframe-mfdrjg9l8lz.ws-us81.gitpod.io',
     public=True,
     permission_classes=(permissions.AllowAny,), )
+
+
 urlpatterns = [
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
 from apps.account.models import User
-from apps.common.jwt_handle import JwtRefreshTokenGenerator
+from apps.common.jwt_handle import JwtRefreshTokenGenerator, JwtTokenGenerator
 from ...jwt.v1.tasks import send_mail_reset_password
 from ....common.custom_exception_handler import CustomAPIException
 
@@ -25,7 +25,14 @@ class JWTLoginSerializer(serializers.Serializer):
         user = authenticate(username=username, password=password)
         if not user:
             raise AuthenticationFailed()
-        return user
+
+        token_generator = JwtTokenGenerator()
+        token = token_generator.get_token(user)
+        user.sid = token_generator.jti
+        return {
+            'user': user,
+            'token': token
+        }
 
 
 class JWTAdminLoginSerializer(serializers.Serializer):
@@ -45,7 +52,14 @@ class JWTAdminLoginSerializer(serializers.Serializer):
             raise AuthenticationFailed()
         if not user.is_admin:
             raise AuthenticationFailed()
-        return user
+
+        token_generator = JwtTokenGenerator()
+        token = token_generator.get_token(user)
+        user.sid = token_generator.jti
+        return {
+            'user': user,
+            'token': token
+        }
 
 
 class JWTRefreshTokenSerializer(serializers.Serializer):

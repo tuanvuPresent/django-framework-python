@@ -39,7 +39,6 @@ class FileUploadViewSet(BaseGenericViewSet):
         file = request.FILES
 
         serializer = self.get_serializer(data=file)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

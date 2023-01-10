@@ -16,7 +16,7 @@ from apps.auth.jwt.v1.serializer import JWTLoginSerializer, JWTPasswordChangeSer
 from apps.common.jwt_handle import JwtTokenGenerator
 from apps.common.custom_exception_handler import CustomAPIException
 from apps.common.custom_model_view_set import BaseGenericViewSet
-
+from apps.auth.jwt.signals import user_login, user_logout
 
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
@@ -30,15 +30,12 @@ class JWTAuthAPIView(BaseGenericViewSet):
     @action(methods=['post'], detail=False)
     def logout(self, request):
         if request.user.is_authenticated:
-            auth = get_authorization_header(request).split()
-            if not auth:
-                auth = request.COOKIES.get(api_settings.JWT_AUTH_COOKIE)
-            else:
-                auth = auth[1]
-            token = auth
-            RevokedToken.objects.create(token=token)
+            auth = request.auth
+            auth = request.COOKIES.get(api_settings.JWT_AUTH_COOKIE)
+
         response = Response(data=None)
         response.delete_cookie(api_settings.JWT_AUTH_COOKIE)
+        user_logout.send(sender=request.user.__class__, user=request.user)
         return response
 
     @swagger_auto_schema(request_body=JWTLoginSerializer)
@@ -46,9 +43,9 @@ class JWTAuthAPIView(BaseGenericViewSet):
     def login(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
+        user = serializer.validated_data.get('user')
+        token = serializer.validated_data.get('token')
 
-        token = JwtTokenGenerator().get_token(user)
         data = {
             'token': token,
             'user_id': user.pk,
@@ -61,6 +58,8 @@ class JWTAuthAPIView(BaseGenericViewSet):
                                 token,
                                 expires=expiration,
                                 httponly=True)
+
+        user_login.send(sender=request.user.__class__, user=user)
         return response
 
     @swagger_auto_schema(request_body=JWTAdminLoginSerializer)

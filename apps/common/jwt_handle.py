@@ -39,12 +39,13 @@ class JwtTokenGenerator:
         return self.payload
 
     def set_payload(self, user):
-        self.payload = {}
-        self.payload['user_id'] = user.pk
-        self.payload['username'] = user.username
-        self.payload['exp'] = datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA,
-        self.payload['jti'] = uuid.uuid4()
-        self.payload['iat'] = datetime.now().timestamp()
+        self.payload = {
+            'user_id':  user.pk,
+            'username': user.username,
+            'exp': datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA,
+            'jti': str(uuid.uuid4()),
+            'iat': datetime.now().timestamp()
+        }
         return self.payload
 
     @property
@@ -62,6 +63,10 @@ class JwtTokenGenerator:
     @property
     def exp(self):
         return self.payload.get('exp')
+
+    @property
+    def jti(self):
+        return self.payload.get('jti')
 
     @property
     def iat(self):
