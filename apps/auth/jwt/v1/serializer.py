@@ -1,16 +1,11 @@
-from datetime import datetime
-
 from django.contrib.auth import authenticate
 from jwt import ExpiredSignatureError, DecodeError
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_jwt.settings import api_settings
 
 from apps.account.models import User
-from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
 from apps.common.jwt_handle import JwtRefreshTokenGenerator
 from ...jwt.v1.tasks import send_mail_reset_password
-from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
 
 
@@ -24,7 +19,8 @@ class JWTLoginSerializer(serializers.Serializer):
         password = data.get('password', None)
 
         if not username or not password:
-            raise serializers.ValidationError('password and username field required')
+            raise serializers.ValidationError(
+                'password and username field required')
 
         user = authenticate(username=username, password=password)
         if not user:
@@ -66,7 +62,6 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
             raise AuthenticationFailed('Invalid Token!')
         except Exception:
             raise AuthenticationFailed('Invalid token.')
-
 
         user = User.objects.filter(pk=token_generator.user_id).first()
         if not user:
