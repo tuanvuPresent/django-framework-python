@@ -29,10 +29,6 @@ class JWTAuthAPIView(BaseGenericViewSet):
 
     @action(methods=['post'], detail=False)
     def logout(self, request):
-        if request.user.is_authenticated:
-            auth = request.auth
-            auth = request.COOKIES.get(api_settings.JWT_AUTH_COOKIE)
-
         response = Response(data=None)
         response.delete_cookie(api_settings.JWT_AUTH_COOKIE)
         user_logout.send(sender=request.user.__class__, user=request.user)
