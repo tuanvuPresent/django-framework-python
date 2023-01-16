@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'apps.totp',
     'apps.upfile',
     'apps.webhook',
+    'apps.sample_els',
 
     'rest_pyotp',
     'rest_framework.authtoken',
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     'graphene_django',
     'constance',
     'constance.backends.database',
+    'django_elasticsearch_dsl_drf',
+    'django_elasticsearch_dsl',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -361,4 +364,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_CONFIG = {
     'NAME': ('', 'name', str),
+}
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'elasticsearch://user:pass@localhost:9200'
+    },
 }

@@ -11,6 +11,7 @@ urlpatterns = [
     url('', include('apps.sendmail.urls')),
     url('', include('apps.shops.urls')),
     url('', include('apps.sample.urls')),
+    url('', include('apps.sample_els.urls')),
     url('', include('apps.totp.urls')),
     url('', include('apps.upfile.urls')),
     url('', include('apps.paypal.urls')),
