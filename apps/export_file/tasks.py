@@ -2,7 +2,7 @@ from django.conf import settings
 from Example.celery import app
 from apps.account.models import User
 import xlwt as xlwt
-from apps.exportfile.models import DownloadFileLog
+from apps.export_file.models import DownloadFileLog
 
 
 def get_path():

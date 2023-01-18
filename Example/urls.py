@@ -32,16 +32,20 @@ schema_view = get_schema_view(openapi.Info(
     contact=openapi.Contact(email="contact@snippets.local"),
     license=openapi.License(name="BSD License"),
 ),
+    url='https://8000-tuanvuprese-djangoframe-1odgc9kjp0y.ws-us83.gitpod.io',
     public=True,
     permission_classes=(permissions.AllowAny,), )
 
 
 urlpatterns = [
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui('swagger',
+        cache_timeout=0), name='schema-swagger-ui'),
+    url(r'^redoc/$', schema_view.with_ui('redoc',
+        cache_timeout=0), name='schema-redoc'),
     url('admin/', admin.site.urls),
-    
+
     url('api/', include('apps.urls')),
 
     url(r'^silk/', include('silk.urls', namespace='silk')),
@@ -49,4 +53,5 @@ urlpatterns = [
     url("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema))),
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

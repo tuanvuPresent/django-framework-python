@@ -1,5 +1,5 @@
 import xlwt as xlwt
-from apps.exportfile.tasks import export_user
+from apps.export_file.tasks import export_user
 
 class ExportService:
 

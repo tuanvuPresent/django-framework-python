@@ -7,6 +7,4 @@ router = routers.SimpleRouter()
 router.register('upload/v1', views.FileUploadView, basename='upload')
 router.register('upload/v2', views.FileUploadViewSet, basename='upload')
 
-urlpatterns = [
-    url('', include(router.urls)),
-]
+urlpatterns = router.urls
