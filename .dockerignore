@@ -4,3 +4,5 @@ Dockerfile
 README.md
 db.sqlite3
 venv
+.env
+.env.example

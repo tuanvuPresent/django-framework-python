@@ -6,7 +6,7 @@ from apps.common.custom_model_view_set import BaseModelViewSet
 
 
 class BookAPIView(BaseModelViewSet):
-    filter_class = BookFilter
+    filterset_class = BookFilter
     throttle_scope = 'sample_rates'
     queryset = Book.objects.all().select_related('type_book')
 

@@ -1,7 +1,9 @@
-# django-framework-python
+# Django-framework-python
 - [https://www.django-rest-framework.org/](https://www.django-rest-framework.org/)
 - [https://docs.djangoproject.com/en/3.0/](https://docs.djangoproject.com/en/3.0/)
-# use 
+
+---
+# Use
 step 1: install docker and docker-compose
 
 - [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
@@ -12,18 +14,16 @@ step 2: Build code with docker compose
 docker-compose up --build
 ```
 
-step 3: Create folder logs tại root project
-
-step 4: Run
+step 3: Run
 ```
 - run server 0.0.0.0:8888
 
 - run phpmyadmin 0.0.0.0:8088
 ```
-
+---
 # social-oauth2
 ```To get info user``` 
-# GITHUB
+### Github
 - access_token_github = 'abc'
 - headers = {'Authorization': 'token {}'.format(access_token_github)}
 - url1 = 'https://api.github.com/user'
@@ -33,19 +33,19 @@ step 4: Run
 - print('github', res1.json())
 - print('github', res2.json())
 
-# FACEBOOK
+### Facebook
 - url = 'https://graph.facebook.com/v3.2/me'
 - access_token_facebook = 'abc'
 - params = {'access_token': access_token_facebook}
 - res = requests.get(url, headers=headers, params=params)
 - print('facebook', res.json())
 
-# GOOGLE
+### Google
 - url = 'https://www.googleapis.com/oauth2/v3/userinfo'
 - access_token_google = 'abc'
 - headers = {'Authorization': 'Bearer {}'.format(access_token_google)}
 - res = requests.get(url, headers=headers)
 - print('google', res.json())
 
-# Third-party application permissions for mail 
+### Third-party application permissions for mail 
 - https://myaccount.google.com/lesssecureapps
