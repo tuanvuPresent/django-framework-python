@@ -1,11 +1,9 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins
-from rest_framework.permissions import AllowAny
-from rest_framework.throttling import ScopedRateThrottle
-from rest_framework.viewsets import GenericViewSet
-
 from apps.common.custom_authentication import JWTAuthentication
 from apps.common.serializer import NoneSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.viewsets import GenericViewSet
 
 
 class BaseResponse:
@@ -36,9 +34,9 @@ class BaseGenericViewSet(GenericViewSet):
     def get_permissions(self):
         try:
             permission_classes = self.permission_action_classes[self.action]
+            return [permission() for permission in permission_classes]
         except (KeyError, AttributeError):
-            permission_classes = [AllowAny]
-        return [permission() for permission in permission_classes]
+            return super().get_permissions()
 
     def get_serializer_class(self):
         try:
