@@ -1,3 +1,4 @@
+from django_elasticsearch_dsl_drf.constants import LOOKUP_QUERY_CONTAINS
 from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend, FilteringFilterBackend
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
 
@@ -19,5 +20,8 @@ class SampleDocumentApiView(DocumentViewSet):
     )
 
     filter_fields = {
-        'name': 'name'
+        'name': {
+            'field': 'name',
+            'default_lookup': LOOKUP_QUERY_CONTAINS,
+        },
     }
