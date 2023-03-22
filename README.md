@@ -49,3 +49,56 @@ step 3: Run
 
 ### Third-party application permissions for mail 
 - https://myaccount.google.com/lesssecureapps
+
+
+## Filter elasticsearch
+
+- all
+
+```
+search = MyModel.objects.all()
+search = MyModelDocument.search()
+```
+
+- Filter
+
+```
+queryset = queryset.filter(my_field__icontains=value)
+search = search.filter('match_phrase', my_field=value)
+```
+
+```
+queryset = queryset.filter(my_field__exact=value)
+search = search.filter('match', my_field=value)
+```
+
+```python
+from django.db import models
+
+queryset = queryset.filter(
+    models.Q(my_field=value) |
+    models.Q(my_field2=value2)
+)
+
+from elasticsearch_dsl.query import Q
+
+search = search.query(
+    Q('match', my_field=value) |
+    Q('match', my_field2=value2)
+)
+```
+
+```python
+from datetime import datetime
+
+queryset = queryset.filter(
+    published_at__lte=datetime.now(),
+)
+
+from datetime import datetime
+
+search = search.filter(
+    'range',
+    published_at={'lte': datetime.now()}
+)
+```
