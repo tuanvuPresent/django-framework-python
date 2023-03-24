@@ -20,8 +20,9 @@ def user_logout_event(sender, user, **kwargs):
 
 
 @receiver(user_logout_device_others)
-def user_logout_event(sender, sid, **kwargs):
-    user_activity = UserActivity.objects.filter(session_key=user.sid).first()
+def user_logout_device_others_event(sender, sid, **kwargs):
+    user_activity = UserActivity.objects.filter(session_key=sid).first()
     if user_activity:
-        UserActivityStore(user_activity.user).logged_out()
+        user_activity.user.sid = sid
+        UserActivityStore(user=user_activity.user).logged_out()
         user_activity.delete()

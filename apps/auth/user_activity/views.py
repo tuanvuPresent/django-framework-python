@@ -5,7 +5,7 @@ from apps.common.custom_model_view_set import BaseGenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
+from apps.auth.jwt.signals import user_logout_device_others
 
 class UserActivityAPIView(BaseGenericViewSet,
                           mixins.ListModelMixin):
