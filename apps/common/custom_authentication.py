@@ -66,7 +66,9 @@ class JWTAuthentication(JSONWebTokenAuthentication):
 
     def get_user(self, token_generator):
         try:
-            return User.objects.get(pk=token_generator.user_id)
+            user = User.objects.get(pk=token_generator.user_id)
+            user.sid = token_generator.jti
+            return user
         except User.DoesNotExist:
             raise AuthenticationFailed(
                 'No user matching this token was found.')
