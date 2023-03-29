@@ -1,6 +1,6 @@
 import random
 
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 from apps.account.constant import GenderType, UserType
@@ -40,3 +40,19 @@ class UserProfile(UuidModel):
         User, on_delete=models.CASCADE, related_name='profile')
     dob = models.DateField()
     address = models.CharField(max_length=255)
+    
+    
+class UserApiPermission(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    api_code = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'auth_user_api_permission'
+
+
+class GroupApiPermission(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    api_code = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = 'auth_group_api_permission'
