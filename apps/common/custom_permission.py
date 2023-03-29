@@ -1,6 +1,7 @@
 from rest_framework import permissions
-
+from django.core.cache import cache
 from apps.account.constant import UserType
+from apps.account.models import GroupApiPermission
 
 
 class IsSuperUser(permissions.BasePermission):
@@ -93,3 +94,31 @@ class IsAdminUserOrIsUserObjects(permissions.BasePermission):
         if type(obj) == type(request.user):
             return obj == request.user or request.user.user_type == UserType.ADMIN.value
         return obj.user_id == request.user or request.user.user_type == UserType.ADMIN.value
+
+ 
+class GenericApiPermission(permissions.BasePermission):
+    message = "You do not have permission to perform action"
+    permission_code = '{api_view}.{action}'
+    CACHE_KEY = 'permissions{user_id}'
+    CACHE_TTL = 5 * 60
+
+    def has_permission(self, request, view):
+        if request.user.is_authenticated and request.user.is_superuser:
+            return True
+
+        perm_code = self.permission_code.format(api_view=view.__class__.__name__.lower(), action=view.action)
+        if perm_code in self.get_user_permissions(request.user):
+            return True
+
+        return False
+
+    def get_user_permissions(self, user):
+        perms = cache.get(self.CACHE_KEY.format(user_id=user.id))
+        if perms:
+            return perms
+
+        api_perms = set(user.userapipermission_set.values_list('api_code', flat=True))
+        group_api_perms = set(GroupApiPermission.objects.filter(group__user=user.id).values_list('api_code', flat=True))
+        perms = { *api_perms, *group_api_perms }
+        cache.set(self.CACHE_KEY.format(user_id=user.id), perms, self.CACHE_TTL)
+        return perms
