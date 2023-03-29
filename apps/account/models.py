@@ -2,7 +2,7 @@ import random
 
 from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
-
+from django.conf import settings
 from apps.account.constant import GenderType, UserType
 from apps.common.models import UuidModel
 
