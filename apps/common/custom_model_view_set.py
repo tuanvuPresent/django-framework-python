@@ -19,6 +19,48 @@ class BaseResponse:
             'data': data,
         }
 
+        
+class AuthenticationMixin:
+    authentication_classes_action = {}
+   
+    def get_authenticators(self):
+        method = self.request.method.lower()
+        if method == 'options':
+            _action = 'metadata'
+        else:
+            _action = self.action_map.get(method)
+        try:
+            auth_classes = self.authentication_classes_action[_action]
+            return [auth() for auth in auth_classes]
+        except (KeyError, AttributeError):
+            return super().get_authenticators()
+
+    """
+    Usage:
+    authentication_classes = [] # default
+    authentication_classes_action = {
+        'list': []
+    }
+    """
+
+
+class PermissionMixin:
+    permission_action_classes = {}
+
+    def get_permissions(self):
+        try:
+            permission_classes = self.permission_action_classes[self.action]
+            return [permission() for permission in permission_classes]
+        except (KeyError, AttributeError):
+            return super().get_permissions()
+
+    """
+    Usage:
+    permission_classes = [] # default
+    permission_action_classes = {
+        'list': []
+    }
+    """
 
 class BaseGenericViewSet(GenericViewSet):
     authentication_classes = [JWTAuthentication]
