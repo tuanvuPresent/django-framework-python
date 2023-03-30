@@ -105,7 +105,7 @@ class GenericApiPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.is_authenticated and request.user.is_superuser:
             return True
-
+        
         perm_code = self.permission_code.format(api_view=view.__class__.__name__.lower(), action=view.action)
         if perm_code in self.get_user_permissions(request.user):
             return True
@@ -117,7 +117,9 @@ class GenericApiPermission(permissions.BasePermission):
         if perms:
             return perms
 
-        api_perms = set(user.userapipermission_set.values_list('api_code', flat=True))
+        api_perms = set()
+        if hasattr(user, 'userapipermission_set'):
+            api_perms = set(user.userapipermission_set.values_list('api_code', flat=True))
         group_api_perms = set(GroupApiPermission.objects.filter(group__user=user.id).values_list('api_code', flat=True))
         perms = { *api_perms, *group_api_perms }
         cache.set(self.CACHE_KEY.format(user_id=user.id), perms, self.CACHE_TTL)
