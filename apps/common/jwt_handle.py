@@ -85,12 +85,11 @@ class JwtRefreshTokenGenerator(JwtTokenGenerator):
 
     def _validate_refresh_token_exp(self):
         orig_iat = self.iat
-        if api_settings.JWT_ALLOW_REFRESH:
-            refresh_limit = api_settings.JWT_REFRESH_EXPIRATION_DELTA.total_seconds()
-
-            expiration_timestamp = orig_iat + int(refresh_limit)
-            now_timestamp = datetime.now().astimezone().timestamp()
-            if now_timestamp > expiration_timestamp:
-                raise CustomAPIException('Refresh has expired.')
-        else:
+        if not api_settings.JWT_ALLOW_REFRESH:
             raise CustomAPIException('Not allow refresh.')
+        refresh_limit = api_settings.JWT_REFRESH_EXPIRATION_DELTA.total_seconds()
+
+        expiration_timestamp = orig_iat + int(refresh_limit)
+        now_timestamp = datetime.now().astimezone().timestamp()
+        if now_timestamp > expiration_timestamp:
+            raise CustomAPIException('Refresh has expired.')

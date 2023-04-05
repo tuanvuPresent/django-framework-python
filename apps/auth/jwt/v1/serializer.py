@@ -70,21 +70,20 @@ class JWTRefreshTokenSerializer(serializers.Serializer):
         try:
             token_generator = JwtRefreshTokenGenerator()
             payload = token_generator.verify_refresh_token(token)
-        except ExpiredSignatureError:
-            raise AuthenticationFailed('Token Expired!')
-        except DecodeError:
-            raise AuthenticationFailed('Invalid Token!')
-        except Exception:
-            raise AuthenticationFailed('Invalid token.')
+        except ExpiredSignatureError as e:
+            raise AuthenticationFailed('Token Expired!') from e
+        except DecodeError as e:
+            raise AuthenticationFailed('Invalid Token!') from e
+        except Exception as e:
+            raise AuthenticationFailed('Invalid token.') from e
 
-        user = User.objects.filter(pk=token_generator.user_id).first()
-        if not user:
+        if user := User.objects.filter(pk=token_generator.user_id).first():
+            return {
+                'user': user,
+                'token': JwtRefreshTokenGenerator().get_token(user)
+            }
+        else:
             raise AuthenticationFailed('No user matching this token was found.')
-
-        return {
-            'user': user,
-            'token': JwtRefreshTokenGenerator().get_token(user)
-        }
 
 
 class JWTPasswordChangeSerializer(serializers.Serializer):

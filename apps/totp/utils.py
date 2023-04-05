@@ -21,10 +21,7 @@ class TotpService:
             return False
 
         totp = pyotp.TOTP(instance.key)
-        if not totp.verify(otp):
-            return False
-
-        return True
+        return bool(totp.verify(otp))
 
     def _get_label_name(self, user):
         return user.username
@@ -44,5 +41,4 @@ class TotpService:
         }
         urlencoded_params = urlencode(params)
 
-        uri = 'otpauth://totp/{}?{}'.format(quote(label), urlencoded_params)
-        return uri
+        return f'otpauth://totp/{quote(label)}?{urlencoded_params}'

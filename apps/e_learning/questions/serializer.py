@@ -102,10 +102,14 @@ class CreateQuestionSerializer(serializers.ModelSerializer):
 
     def validate_answers(self, answers):
         if len(answers) > AnswerNumber.MAX.value:
-            raise serializers.ValidationError('{} {}'.format('number answer must <= ', AnswerNumber.MAX.value))
+            raise serializers.ValidationError(
+                f'number answer must <=  {AnswerNumber.MAX.value}'
+            )
 
         if len(answers) < AnswerNumber.MIN.value:
-            raise serializers.ValidationError('{} {}'.format('number answer must >= ', AnswerNumber.MIN.value))
+            raise serializers.ValidationError(
+                f'number answer must >=  {AnswerNumber.MIN.value}'
+            )
 
         for answer in answers:
             if len(answer['content']) < 5:

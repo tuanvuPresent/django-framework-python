@@ -23,8 +23,9 @@ class VerificationPhoneView(BaseGenericViewSet):
         security_code = phone_verification_service.generate_security_code()
         token = phone_verification_service.generate_session_token(phone_number)
         phone_verification_service.send_security_code(
-            message='use session code {} for authentication.'.format(security_code),
-            to=phone_number)
+            message=f'use session code {security_code} for authentication.',
+            to=phone_number,
+        )
         Phone.objects.filter(phone_number=phone_number).delete()
         Phone.objects.create(
             phone_number=phone_number,

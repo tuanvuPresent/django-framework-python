@@ -22,8 +22,7 @@ class VerifyOtpSerilaizer(serializers.Serializer):
         user_id = request.user.id
         otp = attrs.get('otp')
 
-        is_valid = TotpService().verify(user_id=user_id, otp=otp)
-        if not is_valid:
+        if is_valid := TotpService().verify(user_id=user_id, otp=otp):
+            return True
+        else:
             raise serializers.ValidationError('OTP không hợp lệ')
-
-        return True

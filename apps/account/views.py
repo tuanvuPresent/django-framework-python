@@ -42,8 +42,7 @@ class RegisterUserAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = User.objects.filter(is_active=True).select_related('profile')
-        return queryset
+        return User.objects.filter(is_active=True).select_related('profile')
 
     @swagger_auto_schema(request_body=DeleteSerialize)
     @action(methods=['DELETE'], detail=False)
@@ -63,7 +62,7 @@ class RegisterUserAPIView(BaseModelViewSet):
     @action(methods=['post'], detail=False, url_path='email/register')
     def register_email(self, request, *args, **kwargs):
         token = generate_token_register_email(request.user)
-        body = get_current_site(request).domain + '/api/account/email/verify/?code={}'.format(token)
+        body = f'{get_current_site(request).domain}/api/account/email/verify/?code={token}'
         if not request.user.email:
             raise CustomAPIException('You do not have email information')
         send_mail_task.delay('VERIFY EMAIL', body, request.user.email)

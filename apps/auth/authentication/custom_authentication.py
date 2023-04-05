@@ -22,17 +22,17 @@ class ExpiringTokenAuthentication(TokenAuthentication):
 
         try:
             token = auth[1].decode()
-        except UnicodeError:
+        except UnicodeError as e:
             msg = 'Invalid token header. Token string should not contain invalid characters.'
-            raise AuthenticationFailed(msg)
+            raise AuthenticationFailed(msg) from e
 
         return self.authenticate_credentials(token)
 
     def authenticate_credentials(self, key):
         try:
             token = Token.objects.select_related('user').get(key=key)
-        except Token.DoesNotExist:
-            raise AuthenticationFailed()
+        except Token.DoesNotExist as e:
+            raise AuthenticationFailed() from e
 
         if is_expired(token):
             raise AuthenticationFailed('Token has expired')

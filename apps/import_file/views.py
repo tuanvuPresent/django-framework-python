@@ -22,15 +22,13 @@ class ImportAPIView(BaseGenericViewSet):
         excel_file = request.FILES["file"]
         try:
             wb = openpyxl.load_workbook(excel_file)
-        except BadZipFile:
-            raise CustomAPIException(ErrorMessage.FORMAT_FILE)
+        except BadZipFile as e:
+            raise CustomAPIException(ErrorMessage.FORMAT_FILE) from e
 
-        excel_data = list()
+        excel_data = []
         for worksheet in wb:
             for row in worksheet.iter_rows():
-                row_data = list()
-                for cell in row:
-                    row_data.append(str(cell.value))
+                row_data = [str(cell.value) for cell in row]
                 excel_data.append(row_data)
 
         return Response(data=excel_data)
@@ -49,12 +47,8 @@ class ImportAPIView(BaseGenericViewSet):
         items = ['type', 'name', 'pass', 'No']
         data = []
         for line in lines:
-            res = {}
             line = line.split(',')
-            col = 0
-            for item in items:
-                res[str(item)] = line[col]
-                col += 1
+            res = {str(item): line[col] for col, item in enumerate(items)}
             data.append(res)
         return Response(data=data)
 
@@ -72,6 +66,4 @@ class ImportAPIView(BaseGenericViewSet):
             raise CustomAPIException()
 
         row_iter = df.iterrows()
-        for index, row in row_iter:
-            pass
         return Response()

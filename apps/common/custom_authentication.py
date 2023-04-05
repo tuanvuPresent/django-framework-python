@@ -35,9 +35,9 @@ class JWTAuthentication(JSONWebTokenAuthentication):
 
         try:
             token = auth[1].decode()
-        except UnicodeError:
+        except UnicodeError as e:
             msg = 'Invalid token header. Token string should not contain invalid characters.'
-            raise AuthenticationFailed(msg)
+            raise AuthenticationFailed(msg) from e
 
         return token
 
@@ -51,13 +51,13 @@ class JWTAuthentication(JSONWebTokenAuthentication):
         try:
             token_generator = JwtTokenGenerator()
             payload = token_generator.verify_token(token)
-        except ExpiredSignatureError:
-            raise AuthenticationFailed('Token Expired!')
-        except DecodeError:
-            raise AuthenticationFailed('Invalid Token!')
-        except Exception:
-            raise AuthenticationFailed('Invalid token.')
-        
+        except ExpiredSignatureError as e:
+            raise AuthenticationFailed('Token Expired!') from e
+        except DecodeError as e:
+            raise AuthenticationFailed('Invalid Token!') from e
+        except Exception as e:
+            raise AuthenticationFailed('Invalid token.') from e
+
         user = self.get_stateless_user(token_generator)
         if self.is_revoked(user):
             raise AuthenticationFailed('Invalid token.')
@@ -69,9 +69,10 @@ class JWTAuthentication(JSONWebTokenAuthentication):
             user = User.objects.get(pk=token_generator.user_id)
             user.sid = token_generator.jti
             return user
-        except User.DoesNotExist:
+        except User.DoesNotExist as e:
             raise AuthenticationFailed(
-                'No user matching this token was found.')
+                'No user matching this token was found.'
+            ) from e
 
     def get_stateless_user(self, token_generator):
         user = User(id=token_generator.user_id, username=token_generator.username)

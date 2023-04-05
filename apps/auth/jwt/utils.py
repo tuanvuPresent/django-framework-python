@@ -34,9 +34,7 @@ class CustomEmailVerifyTokenGenerator:
             token=payload.get('orig_iat'),
             is_active=True
         ).first()
-        if not reset_pass_ref:
-            return False, None
-        return True, reset_pass_ref.user_id
+        return (True, reset_pass_ref.user_id) if reset_pass_ref else (False, None)
 
     def make_code(self, user, time_token):
         token_length = settings.RESET_PASSWORD_CODE_LENGTH or self.RESET_PASSWORD_CODE_LENGTH
@@ -74,7 +72,7 @@ class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
         return self._make_token_with_timestamp(user, self._num_seconds(self._now()))
 
     def check_token(self, user, token):
-        if not (user and token):
+        if not user or not token:
             return False
         try:
             ts_b36, _ = token.split("-")
@@ -86,18 +84,19 @@ class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
             return False
 
         # Check that the timestamp/uid has not been tampered with
-        if not constant_time_compare(self._make_token_with_timestamp(user, ts), token):
-            if not constant_time_compare(
-                    self._make_token_with_timestamp(user, ts, legacy=True),
-                    token,
-            ):
-                return False
-
-        # Check the timestamp is within limit.
-        if (self._num_seconds(self._now()) - ts) > settings.RESET_PASSWORD_EXPIRATION_TIME:
+        if not constant_time_compare(
+            self._make_token_with_timestamp(user, ts), token
+        ) and not constant_time_compare(
+            self._make_token_with_timestamp(user, ts, legacy=True),
+            token,
+        ):
             return False
 
-        return True
+        # Check the timestamp is within limit.
+        return (
+            self._num_seconds(self._now()) - ts
+            <= settings.RESET_PASSWORD_EXPIRATION_TIME
+        )
 
     def make_uid(self, user):
         return urlsafe_base64_encode(force_bytes(user.pk))
@@ -105,5 +104,5 @@ class CustomPasswordResetTokenGenerator(PasswordResetTokenGenerator):
     def decode_uid(self, uid):
         try:
             return urlsafe_base64_decode(uid).decode()
-        except:
+        except Exception:
             return None

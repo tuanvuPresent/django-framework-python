@@ -51,13 +51,13 @@ class Query(graphene.ObjectType):
         BookObjectType, name=graphene.String(required=True))
     all_book = graphene.List(BookObjectType)
 
-    def resolve_book_by_name(root, info, name):
+    def resolve_book_by_name(self, info, name):
         try:
             return Book.objects.get(name=name)
         except Book.DoesNotExist:
             return None
 
-    def resolve_all_book(root, info):
+    def resolve_all_book(self, info):
         return Book.objects.all()
 
 

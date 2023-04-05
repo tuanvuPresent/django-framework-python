@@ -42,21 +42,15 @@ class OrderAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        if self.request.method == 'GET':
-            queryset = Order.objects.all().prefetch_related(
-                Prefetch(
-                    'order_detail',
-                    queryset=OrderDetail.objects.all()
-                )
+        return (
+            Order.objects.all().prefetch_related(
+                Prefetch('order_detail', queryset=OrderDetail.objects.all())
             )
-        else:
-            queryset = Order.objects.filter(is_pay=False).prefetch_related(
-                Prefetch(
-                    'order_detail',
-                    queryset=OrderDetail.objects.all()
-                )
+            if self.request.method == 'GET'
+            else Order.objects.filter(is_pay=False).prefetch_related(
+                Prefetch('order_detail', queryset=OrderDetail.objects.all())
             )
-        return queryset
+        )
 
     @transaction.atomic()
     @swagger_auto_schema(request_body=DeleteSerialize)

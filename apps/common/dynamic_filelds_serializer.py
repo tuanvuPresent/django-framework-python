@@ -4,8 +4,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super(DynamicFieldsModelSerializer, self).__init__(*args, **kwargs)
-        fields = self.context['request'].query_params.get('fields')
-        if fields:
+        if fields := self.context['request'].query_params.get('fields'):
             fields = fields.split(',')
             allowed = set(fields)
             existing = set(self.fields.keys())

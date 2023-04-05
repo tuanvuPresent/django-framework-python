@@ -20,7 +20,7 @@ def get_all_api():
         action = endpoint[2].actions.get(method)
         class_name = endpoint[2].cls.__name__.lower()
         api_code = f'{class_name}.{action}'
-        data.append((api_code, api_code + ' | ' + endpoint[0]))
+        data.append((api_code, f'{api_code} | {endpoint[0]}'))
 
     return data
 
@@ -42,9 +42,10 @@ class CustomUserChangeForm(UserChangeForm):
         user = super().save(commit=commit)
         user = user.save()
         UserApiPermission.objects.filter(user=user).delete()
-        data_objs = []
-        for api_code in self.cleaned_data['api_code']:
-            data_objs.append(UserApiPermission(user=user, api_code=api_code))
+        data_objs = [
+            UserApiPermission(user=user, api_code=api_code)
+            for api_code in self.cleaned_data['api_code']
+        ]
         UserApiPermission.objects.bulk_create(data_objs)
         return user
 
@@ -70,9 +71,10 @@ class GroupForm(forms.ModelForm):
         group = super().save(commit=commit)
         group.save()
         self.instance.groupapipermission_set.all().delete()
-        data_objs = []
-        for api_code in self.cleaned_data['api_code']:
-            data_objs.append(GroupApiPermission(group=group, api_code=api_code))
+        data_objs = [
+            GroupApiPermission(group=group, api_code=api_code)
+            for api_code in self.cleaned_data['api_code']
+        ]
         GroupApiPermission.objects.bulk_create(data_objs)
         return group
 

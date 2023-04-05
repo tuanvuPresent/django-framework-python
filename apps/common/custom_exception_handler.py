@@ -10,27 +10,27 @@ from apps.common.constant import ErrorMessage
 def custom_exception_handler(exc, context):
     logger = logging.getLogger(str(context['view']))
     response = exception_handler(exc, context)
-    exc_class = exc.__class__.__name__
     if response is not None:
         status_code = response.status_code
         detail = None
+        exc_class = exc.__class__.__name__
         if exc_class == 'ValidationError':
             error = ErrorMessage.UNKNOWN_ERROR
             detail = get_full_errors_messages(response.data)
-        elif exc_class == "CustomAPIException":
-            error = exc.detail
         elif exc_class == "AuthenticationFailed":
             error = ErrorMessage.INVALID_AUTH
+        elif exc_class == "CustomAPIException":
+            error = exc.detail
+        elif exc_class == "Http404":
+            error = ErrorMessage.NOT_FOUND
+        elif exc_class == "MethodNotAllowed":
+            error = ErrorMessage.NOT_ALLOW_METHOD
         elif exc_class == "NotAuthenticated":
             error = ErrorMessage.NOT_AUTH
         elif exc_class == "PermissionDenied":
             error = ErrorMessage.NOT_PERMISSION
         elif exc_class == "Throttled":
             error = ErrorMessage.THROTTLED_REQUEST
-        elif exc_class == "Http404":
-            error = ErrorMessage.NOT_FOUND
-        elif exc_class == "MethodNotAllowed":
-            error = ErrorMessage.NOT_ALLOW_METHOD
         else:
             error = ErrorMessage.UNKNOWN_ERROR
             detail = str(exc)
@@ -56,7 +56,7 @@ def get_errors_code(detail):
                 return get_errors_code(item)
     elif isinstance(detail, dict):
         for key, value in detail.items():
-            return '{}_{}'.format(key, get_errors_code(value))
+            return f'{key}_{get_errors_code(value)}'
     elif isinstance(detail, ErrorDetail):
         return detail.code
 
@@ -64,9 +64,7 @@ def get_errors_code(detail):
 def get_full_errors(detail):
     if isinstance(detail, list):
         errors = [get_full_errors(item) for item in detail if item]
-        if len(errors) > 1:
-            return errors
-        return errors[0]
+        return errors if len(errors) > 1 else errors[0]
     elif isinstance(detail, dict):
         return {key: get_full_errors(value) for key, value in detail.items()}
     return {
@@ -78,9 +76,7 @@ def get_full_errors(detail):
 def get_full_errors_codes(detail):
     if isinstance(detail, list):
         errors = [get_full_errors_codes(item) for item in detail if item]
-        if len(errors) > 1:
-            return errors
-        return errors[0]
+        return errors if len(errors) > 1 else errors[0]
     elif isinstance(detail, dict):
         return {key: get_full_errors_codes(value) for key, value in detail.items()}
     return detail.code
@@ -89,9 +85,7 @@ def get_full_errors_codes(detail):
 def get_full_errors_messages(detail):
     if isinstance(detail, list):
         errors = [get_full_errors_messages(item) for item in detail if item]
-        if len(errors) > 1:
-            return errors
-        return errors[0]
+        return errors if len(errors) > 1 else errors[0]
     elif isinstance(detail, dict):
         return {key: get_full_errors_messages(value) for key, value in detail.items()}
     return detail

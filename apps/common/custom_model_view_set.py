@@ -25,10 +25,7 @@ class AuthenticationMixin:
    
     def get_authenticators(self):
         method = self.request.method.lower()
-        if method == 'options':
-            _action = 'metadata'
-        else:
-            _action = self.action_map.get(method)
+        _action = 'metadata' if method == 'options' else self.action_map.get(method)
         try:
             auth_classes = self.authentication_classes_action[_action]
             return [auth() for auth in auth_classes]

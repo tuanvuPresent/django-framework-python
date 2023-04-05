@@ -13,9 +13,7 @@ class AuthOtpViewSet(viewsets.GenericViewSet):
     def get_serializer_class(self, *args, **kwargs):
         if self.action == 'generate_totp_provision_uri':
             return TOTPProvisionUriSerializer
-        if self.action == 'verify_otp':
-            return VerifyOtpSerilaizer
-        return NoneSerializer
+        return VerifyOtpSerilaizer if self.action == 'verify_otp' else NoneSerializer
 
     @action(methods=['POST'], detail=False, url_path='generate-totp/provision-uri')
     def generate_totp_provision_uri(self, request):

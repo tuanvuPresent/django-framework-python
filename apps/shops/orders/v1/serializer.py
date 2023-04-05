@@ -54,8 +54,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             product_quantity = order_detail_item.get('product_quantity')
             if product_quantity > product.quantity:
                 raise ValidationError(
-                    'product_quantity of product {} must <= {}'.format(
-                        product.pk, product.quantity)
+                    f'product_quantity of product {product.pk} must <= {product.quantity}'
                 )
 
         return data
@@ -64,10 +63,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = ['product']
         data_copy = []
         for e in data:
-            temp = {}
-            for k, v in e.items():
-                if k in fields:
-                    temp[k] = v
+            temp = {k: v for k, v in e.items() if k in fields}
             data_copy.append(temp)
 
         list_order = []
@@ -87,9 +83,9 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             order_id=order, **order_detail) for order_detail in order_detail_data]
         OrderDetail.objects.bulk_create(order_detail_list)
 
-        total_amount = 0
-        for order_detail in order_detail_data:
-            total_amount += order_detail['amount']
+        total_amount = sum(
+            order_detail['amount'] for order_detail in order_detail_data
+        )
         order.total_amount = total_amount
 
         order.save()

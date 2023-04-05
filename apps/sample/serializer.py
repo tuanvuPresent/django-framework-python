@@ -21,9 +21,7 @@ class BookSerializer(serializers.ModelSerializer):
         name_type = type_book.get('name')
 
         type_book, is_create = TypeBook.objects.get_or_create(name=name_type)
-        book = Book.objects.create(type_book=type_book, **validated_data)
-
-        return book
+        return Book.objects.create(type_book=type_book, **validated_data)
 
     def update(self, instance, validated_data):
         type_book = validated_data.pop('type_book')

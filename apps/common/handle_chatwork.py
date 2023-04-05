@@ -14,7 +14,7 @@ class ChatWorkService:
        Return:
            dict: Your account information (json)
        """
-        url = "{}/me".format(self.API_URL_BASE)
+        url = f"{self.API_URL_BASE}/me"
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -23,7 +23,7 @@ class ChatWorkService:
        Return:
             dict: The number of: unread messages, unfinished tasks etc.
        """
-        url = "{}/my/status".format(self.API_URL_BASE)
+        url = f"{self.API_URL_BASE}/my/status"
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -32,7 +32,7 @@ class ChatWorkService:
        Return:
             list: list of task if there is any otherwise a json error
         """
-        url = "{}/my/tasks?".format(self.API_URL_BASE)
+        url = f"{self.API_URL_BASE}/my/tasks?"
         response = requests.get(url, headers=self.headers)
         if response.status_code != 204:
             return response.json()
@@ -44,7 +44,7 @@ class ChatWorkService:
         Return:
              list: list of your contacts
         """
-        url = "{}/contacts".format(self.API_URL_BASE)
+        url = f"{self.API_URL_BASE}/contacts"
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -53,24 +53,22 @@ class ChatWorkService:
         Return:
              tuple: list of all rooms
         """
-        url = "{}/rooms".format(self.API_URL_BASE)
+        url = f"{self.API_URL_BASE}/rooms"
         response = requests.get(url, headers=self.headers)
         return response.json()
 
     def send_message(self, room_id: int, message: str, subject: str):
-        url = "{}/rooms/{}/messages".format(self.API_URL_BASE, room_id, message)
+        url = f"{self.API_URL_BASE}/rooms/{room_id}/messages"
         data = {
-            'body': '[info][title]{}[/title]{}[/info]'.format(subject, message),
-            'self_unread': 0
+            'body': f'[info][title]{subject}[/title]{message}[/info]',
+            'self_unread': 0,
         }
-        response = requests.post(url, headers=self.headers, data=data)
-        return response
+        return requests.post(url, headers=self.headers, data=data)
 
     def send_file(self, room_id: int, file_path: str, file_name: str, message: str, subject: str):
-        url = "{}/rooms/{}/files".format(self.API_URL_BASE, room_id)
+        url = f"{self.API_URL_BASE}/rooms/{room_id}/files"
         files = {
             "file": (file_name, file_path),
-            "message": '[info][title]{}[/title]{}[/info]'.format(subject, message),
+            "message": f'[info][title]{subject}[/title]{message}[/info]',
         }
-        response = requests.post(url, headers=self.headers, files=files)
-        return response
+        return requests.post(url, headers=self.headers, files=files)

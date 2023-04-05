@@ -19,17 +19,17 @@ def generate_token_register_email(user):
 def validate_token_verify_email(token):
     try:
         payload = jwt_decode_handler(token)
-    except ExpiredSignatureError:
-        raise CustomAPIException('Token verify email expired!')
-    except DecodeError:
-        raise CustomAPIException('Invalid Token!')
-    except Exception:
-        raise CustomAPIException('Invalid token.')
+    except ExpiredSignatureError as e:
+        raise CustomAPIException('Token verify email expired!') from e
+    except DecodeError as e:
+        raise CustomAPIException('Invalid Token!') from e
+    except Exception as e:
+        raise CustomAPIException('Invalid token.') from e
 
     try:
         user = User.objects.get(pk=payload.get(
             'id'), email=payload.get('email'))
-    except User.DoesNotExist:
-        raise CustomAPIException('Invalid token.')
+    except User.DoesNotExist as exc:
+        raise CustomAPIException('Invalid token.') from exc
 
     return user

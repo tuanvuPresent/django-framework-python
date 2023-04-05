@@ -21,7 +21,7 @@ class PayPalService:
             self.BASE_WEB_URL = self.LIVE_WEB_URL
 
     def get_paypal_token(self, client_id, client_secret):
-        url = "{}/v1/oauth2/token".format(self.BASE_API_URL)
+        url = f"{self.BASE_API_URL}/v1/oauth2/token"
         data = {
             "client_id": client_id,
             "client_secret": client_secret,
@@ -30,7 +30,8 @@ class PayPalService:
         headers = {
             "Content-Type": "application/x-www-form-urlencoded",
             "Authorization": "Basic {0}".format(
-                base64.b64encode((client_id + ":" + client_secret).encode()).decode())
+                base64.b64encode(f"{client_id}:{client_secret}".encode()).decode()
+            ),
         }
 
         token = requests.post(url, data, headers=headers)
@@ -39,21 +40,19 @@ class PayPalService:
     def create_order(self, purchase_units):
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET),
+            'Authorization': f'Bearer {self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}',
         }
         json_data = {
             "intent": "CAPTURE",
             "purchase_units": purchase_units
         }
-        url = "{}/v2/checkout/orders".format(self.BASE_API_URL)
-        response = requests.post(url, headers=headers, json=json_data)
-        return response
+        url = f"{self.BASE_API_URL}/v2/checkout/orders"
+        return requests.post(url, headers=headers, json=json_data)
 
     def capture_order(self, order_id):
-        url = "{}/v2/checkout/orders/{}/capture".format(self.BASE_API_URL, order_id)
+        url = f"{self.BASE_API_URL}/v2/checkout/orders/{order_id}/capture"
         headers = {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)
+            "Authorization": f"Bearer {self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}",
         }
-        response = requests.post(url, headers=headers)
-        return response
+        return requests.post(url, headers=headers)

@@ -26,8 +26,7 @@ class User(UuidModel, AbstractUser):
 
     def make_random_password(self, length=8,
                              allowed_chars="abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*"):
-        new_password = "".join(random.sample(allowed_chars, length))
-        return new_password
+        return "".join(random.sample(allowed_chars, length))
 
     def save(self, *args, **kwargs):
         if self.email == "":

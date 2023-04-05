@@ -38,14 +38,12 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
                 category_id__name=category.name, level=level).count()
             if number < config_item.get('number'):
                 raise ValidationError(
-                    'The number of questions for category {}, level {} cannot be more than {}'.format(
-                        category.pk, level, number)
+                    f'The number of questions for category {category.pk}, level {level} cannot be more than {number}'
                 )
 
         if quantity != data.get('quantity_question'):
             raise ValidationError(
-                'quantity_question = {} is invalid'.format(
-                    data.get('quantity_question'))
+                f"quantity_question = {data.get('quantity_question')} is invalid"
             )
         return data
 
@@ -53,10 +51,7 @@ class CreateExamConfigSerializer(serializers.ModelSerializer):
         fields = ['category_id', 'level']
         data_copy = []
         for e in data:
-            temp = {}
-            for k, v in e.items():
-                if k in fields:
-                    temp[k] = v
+            temp = {k: v for k, v in e.items() if k in fields}
             data_copy.append(temp)
 
         list_config = []

@@ -49,7 +49,10 @@ class JWTAuthAPIView(BaseGenericViewSet):
         }
         response = Response(data=data)
         if api_settings.JWT_AUTH_COOKIE:
-            expiration = (datetime.datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA)
+            expiration = (
+                datetime.datetime.now(datetime.timezone.utc)
+                + api_settings.JWT_EXPIRATION_DELTA
+            )
             response.set_cookie(api_settings.JWT_AUTH_COOKIE,
                                 token,
                                 expires=expiration,
@@ -78,7 +81,10 @@ class JWTAuthAPIView(BaseGenericViewSet):
         }
         response = Response(data=data)
         if api_settings.JWT_AUTH_COOKIE:
-            expiration = (datetime.datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA)
+            expiration = (
+                datetime.datetime.now(datetime.timezone.utc)
+                + api_settings.JWT_EXPIRATION_DELTA
+            )
             response.set_cookie(api_settings.JWT_AUTH_COOKIE,
                                 token,
                                 expires=expiration,
@@ -117,18 +123,18 @@ class AuthSocialView(BaseGenericViewSet):
         strategy = load_strategy(request)
         try:
             backend = load_backend(strategy=strategy, name=provider, redirect_uri=None)
-        except MissingBackend:
-            raise CustomAPIException(messenger='Please provide a valid provider')
+        except MissingBackend as e:
+            raise CustomAPIException(messenger='Please provide a valid provider') from e
 
         try:
             access_token = None
             if isinstance(backend, BaseOAuth2):
                 access_token = serializer.data.get('access_token')
             user = backend.do_auth(access_token)
-        except HTTPError:
-            raise CustomAPIException('Invalid token')
-        except AuthTokenError:
-            raise CustomAPIException('Invalid credentials')
+        except HTTPError as exc:
+            raise CustomAPIException('Invalid token') from exc
+        except AuthTokenError as exc:
+            raise CustomAPIException('Invalid credentials') from exc
 
         token = JwtTokenGenerator().get_token(user)
         data = {
@@ -138,7 +144,10 @@ class AuthSocialView(BaseGenericViewSet):
         }
         response = Response(data=data)
         if api_settings.JWT_AUTH_COOKIE:
-            expiration = (datetime.datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA)
+            expiration = (
+                datetime.datetime.now(datetime.timezone.utc)
+                + api_settings.JWT_EXPIRATION_DELTA
+            )
             response.set_cookie(api_settings.JWT_AUTH_COOKIE,
                                 token,
                                 expires=expiration,

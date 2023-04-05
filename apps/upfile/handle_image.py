@@ -15,10 +15,8 @@ def delete_file(name, url):
             os.rmdir(name)
         else:
             os.remove(name)
-    except FileNotFoundError:
-        # FileNotFoundError is raised if the file or directory was removed
-        # concurrently.
-        raise NotFound()
+    except FileNotFoundError as e:
+        raise NotFound() from e
 
 
 def add_file(file, url):

@@ -42,9 +42,11 @@ class ExamAPIView(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        queryset = Exams.objects.all().select_related(
-            'exam_config_id').select_related('topic_id')
-        return queryset
+        return (
+            Exams.objects.all()
+            .select_related('exam_config_id')
+            .select_related('topic_id')
+        )
 
     @transaction.atomic()
     @swagger_auto_schema(request_body=DeleteSerialize)

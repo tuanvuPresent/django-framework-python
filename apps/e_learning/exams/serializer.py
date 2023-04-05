@@ -37,8 +37,7 @@ class CreateExamSerializer(serializers.ModelSerializer):
         name_topic = topic_id.get('name')
         topic, is_created = Topic.objects.get_or_create(
             name=name_topic)
-        exam = Exams.objects.create(topic_id=topic, **validated_data)
-        return exam
+        return Exams.objects.create(topic_id=topic, **validated_data)
 
     def update(self, instance, validated_data):
         topic_id = validated_data.pop('topic_id')

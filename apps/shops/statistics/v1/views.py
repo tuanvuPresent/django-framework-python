@@ -25,5 +25,4 @@ class RevenueAPIView(ListModelMixin,
     }
 
     def get_queryset(self):
-        queryset = Revenue.objects.all()
-        return queryset
+        return Revenue.objects.all()

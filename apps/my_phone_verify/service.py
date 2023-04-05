@@ -28,11 +28,10 @@ class PhoneVerificationService:
     SESSION_TOKEN_INVALID = 4
 
     def send_security_code(self, message, to):
-        url = 'https://api.twilio.com/2010-04-01/Accounts/{}/Messages.json'.format(self.sid_phone)
+        url = f'https://api.twilio.com/2010-04-01/Accounts/{self.sid_phone}/Messages.json'
         data = {'To': to, 'From': self.from_phone, 'Body': message}
         auth = (self.sid_phone, self.secret_phone)
-        res = requests.post(url=url, data=data, auth=auth)
-        return res
+        return requests.post(url=url, data=data, auth=auth)
 
     def generate_security_code(self):
         """

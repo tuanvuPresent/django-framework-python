@@ -72,7 +72,7 @@ class ExportAPIView(GenericViewSet):
         df = pd.DataFrame(data)
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename=""' + file_name
+        response['Content-Disposition'] = f'attachment; filename=""{file_name}'
         df.to_excel(response, index=False)
         return response
 
@@ -103,12 +103,12 @@ class ExportPdfV2APIView(GenericViewSet):
         Story = []
         style = styles["Normal"]
         for i in range(10):
-            bogustext = ("This is This number This is This numberThis is This numberThis is This numberThis is "
-                         "This numberThis is This numberThis is This numberThis is This numberThis is This "
-                         "numberThis is This numberThis is This numberThis is This number %s.  ---- " % i) * 20
+            bogustext = (
+                f"This is This number This is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This number {i}.  ---- "
+                * 20
+            )
             p = Paragraph(bogustext, style)
-            Story.append(p)
-            Story.append(Spacer(1, 0.2 * inch))
+            Story.extend((p, Spacer(1, 0.2 * inch)))
         doc.build(Story)
 
         fs = FileSystemStorage("/tmp")
@@ -132,24 +132,23 @@ class ExportPdfV3APIView(GenericViewSet):
         question = Question.objects.prefetch_related('answers')
         x = 40
         y = 750
-        for i in range(10):
+        for _ in range(10):
             for item in question:
-                pdf.drawString(x, y, item.content + ':')
+                pdf.drawString(x, y, f'{item.content}:')
                 y -= 15
                 if y < 40:
                     pdf.showPage()
                     y = 800
                 for index, answer in enumerate(item.answers.all()):
-                    pdf.drawString(x, y, '    ' + str(index) +
-                                   '.' + answer.content)
+                    pdf.drawString(x, y, f'    {str(index)}.{answer.content}')
                     y -= 15
                     if y < 40:
                         pdf.showPage()
                         y = 800
 
         text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " \
-               "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " \
-               "when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                   "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " \
+                   "when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         t = pdf.beginText(40, 800)
         wraped_text = "\n".join(wrap(text, 80))  # 80 is line width
         pdf.showPage()

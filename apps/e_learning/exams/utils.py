@@ -32,9 +32,11 @@ def get_question(exams):
         number = config_item.number
         category_id = config_item.category_id
         level = config_item.level
-        queryset = Question.objects.filter(category_id=category_id,
-                                           level=level
-                                           ).order_by('?').prefetch_related('answers')[0:number]
+        queryset = (
+            Question.objects.filter(category_id=category_id, level=level)
+            .order_by('?')
+            .prefetch_related('answers')[:number]
+        )
         question.extend(queryset)
     exams.question_id.set(question)
     return question

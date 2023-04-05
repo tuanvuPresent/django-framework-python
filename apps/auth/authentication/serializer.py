@@ -19,10 +19,10 @@ class LoginSerializer(serializers.Serializer):
         if not username or not password:
             raise serializers.ValidationError('password and username field required')
 
-        user = authenticate(username=username, password=password)
-        if not user:
+        if user := authenticate(username=username, password=password):
+            return user
+        else:
             raise AuthenticationFailed()
-        return user
 
 
 class PasswordChangeSerializer(serializers.Serializer):

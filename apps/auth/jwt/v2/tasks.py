@@ -4,10 +4,7 @@ from Example.celery import app
 
 @app.task()
 def send_mail_reset_password_v2(to_email, code):
-    body = 'Xin chào {} , \n\n' \
-           'Mã xác minh: {}\n' \
-           'Mã này chỉ được sử dụng một lần và sẽ hết hạn trong vòng {} phút.\n\n' \
-           'Admin,'.format(to_email, code, settings.RESET_PASSWORD_CODE_EXPIRATION_TIME / 60)
+    body = f'Xin chào {to_email} , \n\nMã xác minh: {code}\nMã này chỉ được sử dụng một lần và sẽ hết hạn trong vòng {settings.RESET_PASSWORD_CODE_EXPIRATION_TIME / 60} phút.\n\nAdmin,'
     send_mail('Đặt lại mật khẩu', body, '', [to_email], fail_silently=False)
 
 
