@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import exception_handler
 from apps.common.custom_model_view_set import BaseResponse
 from apps.common.constant import ErrorMessage
+from sentry_sdk import capture_exception
 
 
 def custom_exception_handler(exc, context):
@@ -39,8 +40,8 @@ def custom_exception_handler(exc, context):
         detail = str(exc)
         error = ErrorMessage.UNKNOWN_ERROR
         status_code = 500
-
         logger.error(exc)
+        capture_exception(exc)
     return Response(BaseResponse(
         status=False,
         message=error.message,

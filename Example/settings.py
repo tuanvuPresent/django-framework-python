@@ -1,6 +1,7 @@
 import datetime
 import os
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 from decouple import Config, RepositoryEnv, config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -372,3 +373,10 @@ ELASTICSEARCH_DSL={
         'hosts': 'elasticsearch://user:pass@localhost:9200'
     },
 }
+
+if os.environ.get('SENTRY_DSN'):
+    sentry_sdk.init(
+        dsn=os.environ.get("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.1,
+    )
