@@ -293,67 +293,67 @@ LOG_VIEWER_PATTERNS = [']OFNI[', ']GUBED[',
 LOG_VIEWER_FILE_LIST_TITLE = "Custom title"
 LOG_VIEWER_FILE_LIST_STYLES = "/static/css/my-custom.css"
 os.makedirs('logs', exist_ok=True)
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {
-            'format': '[%(levelname)s] %(asctime)s %(name)s: %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/debug.log',
-            'formatter': 'standard'
-        },
-        'default': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/default.log',
-            'formatter': 'standard',
-        },
-        'request_debug_handler': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/request_debug.log',
-            'formatter': 'standard',
-        },
-        'request_error_handler': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/request_error.log',
-            'formatter': 'standard',
-        },
-        'mail_admins_handler': {
-            'level': 'DEBUG',
-            'class': 'django.utils.log.AdminEmailHandler',
-            'email_backend': 'django.core.mail.backends.smtp.EmailBackend'
-        },
-    },
-    'root': {
-        'handlers': ['default'],
-        'level': 'DEBUG'
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': [
-                'default',
-                'request_debug_handler',
-                'request_error_handler',
-                'mail_admins_handler'
-            ],
-            'propagate': False
-        },
-        'django': {
-            'handlers': [
-                'console',
-            ],
-            'propagate': False
-        },
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'standard': {
+#             'format': '[%(levelname)s] %(asctime)s %(name)s: %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/debug.log',
+#             'formatter': 'standard'
+#         },
+#         'default': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/default.log',
+#             'formatter': 'standard',
+#         },
+#         'request_debug_handler': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/request_debug.log',
+#             'formatter': 'standard',
+#         },
+#         'request_error_handler': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/request_error.log',
+#             'formatter': 'standard',
+#         },
+#         'mail_admins_handler': {
+#             'level': 'DEBUG',
+#             'class': 'django.utils.log.AdminEmailHandler',
+#             'email_backend': 'django.core.mail.backends.smtp.EmailBackend'
+#         },
+#     },
+#     'root': {
+#         'handlers': ['default'],
+#         'level': 'DEBUG'
+#     },
+#     'loggers': {
+#         'django.request': {
+#             'handlers': [
+#                 'default',
+#                 'request_debug_handler',
+#                 'request_error_handler',
+#                 'mail_admins_handler'
+#             ],
+#             'propagate': False
+#         },
+#         'django': {
+#             'handlers': [
+#                 'console',
+#             ],
+#             'propagate': False
+#         },
+#     }
+# }
 
 # reset password
 RESET_PASSWORD_CODE_LENGTH = env_config('RESET_PASSWORD_CODE_LENGTH', cast=int)
