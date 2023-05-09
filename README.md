@@ -102,3 +102,29 @@ search = search.filter(
     published_at={'lte': datetime.now()}
 )
 ```
+
+aggregation
+
+```python
+query = {
+    "size": 0,
+    "aggs": {
+        "avg_field": {
+            "terms": {
+                "field": "field_group_by"
+            },
+            "aggs": {
+                "avg_field_name": {
+                    "avg": {
+                        "field": "field_name"
+                    }
+                },
+            }
+        }
+    }
+}
+els.search(index=INDEX_ELS, **query)
+```
+```
+https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-weight-avg-aggregation.html
+```
