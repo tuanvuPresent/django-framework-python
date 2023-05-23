@@ -5,6 +5,7 @@ from apps.common.custom_permission import IsAdminUser
 from apps.shops.models.orders import Revenue
 from apps.shops.statistics.v1.serializer import ListRevenueSerializer
 
+
 class RevenueAPIView(ListModelMixin,
                      RetrieveModelMixin,
                      BaseGenericViewSet):

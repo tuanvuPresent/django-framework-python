@@ -1,6 +1,7 @@
 import csv
 from textwrap import wrap
 
+import pandas as pd
 import xlwt as xlwt
 from apps.account.models import User
 from apps.common.serializer import NoneSerializer
@@ -104,7 +105,7 @@ class ExportPdfV2APIView(GenericViewSet):
         style = styles["Normal"]
         for i in range(10):
             bogustext = (
-                f"This is This number This is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This numberThis is This number {i}.  ---- "
+                f"This is This number  ---- "
                 * 20
             )
             p = Paragraph(bogustext, style)
@@ -147,8 +148,8 @@ class ExportPdfV3APIView(GenericViewSet):
                         y = 800
 
         text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. " \
-                   "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " \
-                   "when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+               "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, " \
+               "when an unknown printer took a galley of type and scrambled it to make a type specimen book."
         t = pdf.beginText(40, 800)
         wraped_text = "\n".join(wrap(text, 80))  # 80 is line width
         pdf.showPage()

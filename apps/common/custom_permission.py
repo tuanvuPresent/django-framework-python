@@ -91,9 +91,7 @@ class IsAdminUserOrIsUserObjects(permissions.BasePermission):
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        if type(obj) == type(request.user):
-            return obj == request.user or request.user.user_type == UserType.ADMIN.value
-        return obj.user_id == request.user or request.user.user_type == UserType.ADMIN.value
+        return obj.user_id == request.user.id or request.user.user_type == UserType.ADMIN.value
 
  
 class GenericApiPermission(permissions.BasePermission):
@@ -118,6 +116,6 @@ class GenericApiPermission(permissions.BasePermission):
         if hasattr(user, 'userapipermission_set'):
             api_perms = set(user.userapipermission_set.values_list('api_code', flat=True))
         group_api_perms = set(GroupApiPermission.objects.filter(group__user=user.id).values_list('api_code', flat=True))
-        perms = { *api_perms, *group_api_perms }
+        perms = {*api_perms, *group_api_perms}
         cache.set(self.CACHE_KEY.format(user_id=user.id), perms, self.CACHE_TTL)
         return perms

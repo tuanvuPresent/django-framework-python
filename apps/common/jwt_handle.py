@@ -2,6 +2,7 @@ from datetime import datetime
 import uuid
 import jwt
 from rest_framework_jwt.settings import api_settings
+from apps.common.custom_exception_handler import CustomAPIException
 
 
 def jwt_encode_handler(payload):

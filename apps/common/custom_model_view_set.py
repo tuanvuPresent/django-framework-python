@@ -59,6 +59,7 @@ class PermissionMixin:
     }
     """
 
+
 class BaseGenericViewSet(GenericViewSet):
     authentication_classes = [JWTAuthentication]
     permission_action_classes = {}

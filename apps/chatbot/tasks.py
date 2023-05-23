@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from Example.celery import app
 from apps.chatbot.handle_chatbot import send_chatwork, get_weather, get_xskt
 

@@ -1,7 +1,6 @@
 from apps.common.custom_model_view_set import BaseModelViewSet
 from apps.common.custom_permission import IsAdminUser
 from apps.common.serializer import DeleteSerialize
-from apps.e_learning.config_question.serializer import *
 from django.db import transaction
 from django.db.models import Prefetch
 from django.http import Http404
@@ -10,6 +9,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
+from apps.e_learning.models.exam import Exams, ExamConfiguration, Configuration
+from apps.e_learning.config_question.serializer import CreateExamConfigSerializer, ListExamConfigSerializer
 
 
 @method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))

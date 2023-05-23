@@ -26,6 +26,7 @@ class FileUploadView(BaseGenericViewSet):
 
         return Response(data=file_url)
 
+
 class FileUploadViewSet(BaseGenericViewSet):
     throttle_scope = 'upload'
     parser_classes = (MultiPartParser,)

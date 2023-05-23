@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import models
 from django.utils.timezone import now
 from apps.common.uuid_gen import UuidGenSingletonGroup

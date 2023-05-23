@@ -60,9 +60,11 @@ def get_weather():
         f'DATE: {effectiveDate}\nNOTE: {text}'
         + f'\n\nDailyForecasts: {date}\nNhiệt độ thấp nhất: {min_temperature}\nNhiệt độ cao nhất: {max_temperature}'
     )
-    data += f'\nThời tiết ban ngày:\n\t+{day_detail_phrase}\n\t+Khả năng có mưa: {day_detail_hasPrecipitation}{day_detail_precipitationIntensity}'
+    data += f'\nThời tiết ban ngày:\n\t+{day_detail_phrase}\n\t+Khả năng có mưa: ' \
+            f'{day_detail_hasPrecipitation}{day_detail_precipitationIntensity}'
 
-    data += f'\nThời tiết ban đêm:\n\t+{night_detail_phrase}\n\t+Khả năng có mưa: {night_detail_hasPrecipitation}{night_detail_precipitationIntensity}'
+    data += f'\nThời tiết ban đêm:\n\t+{night_detail_phrase}\n\t+Khả năng có mưa: ' \
+            f'{night_detail_hasPrecipitation}{night_detail_precipitationIntensity}'
     return data
 
 

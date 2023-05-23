@@ -1,8 +1,7 @@
+from apps.common.models import UuidModel
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from apps.common.uuid_gen import uuid
-from apps.common.models import UuidModel
 
 
 class TypeBook(UuidModel):

@@ -24,6 +24,7 @@ def get_urls(raw_urls, nice_urls=None):
                     }
     return nice_urls.values()
 
+
 def get_all_api():
     endpoints = EndpointEnumerator().get_api_endpoints()
     data = []

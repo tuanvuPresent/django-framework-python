@@ -4,15 +4,17 @@ from apps.common.custom_model_view_set import BaseModelViewSet
 from apps.common.custom_permission import IsAdminUser, IsUser
 from apps.common.serializer import DeleteSerialize
 from apps.shops.handle_shop import update_quantity_product
-from apps.shops.orders.v1.serializer import *
+from apps.shops.orders.v1.serializer import ListOrderSerializer, CreateOrderSerializer, PaymentConfirmSerializer
 from django.db import transaction
 from django.db.models import Prefetch
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
+from apps.shops.models.orders import Order, OrderDetail
 
 
 @method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))
@@ -71,7 +73,7 @@ class OrderAPIView(BaseModelViewSet):
         order = Order.objects.filter(is_pay=False, id__in=pk)
 
         if len(pk) != order.count():
-            raise serializers.ValidationError('Those orders were payment')
+            raise ValidationError('Those orders were payment')
 
         for order_item in order:
             order_item.is_pay = True

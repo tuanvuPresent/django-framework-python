@@ -1,5 +1,4 @@
 from django.db import models
-from enum import Enum
 from apps.account.models import User
 from apps.common.models import UuidModel
 from apps.shops.models.product import EntityProduct

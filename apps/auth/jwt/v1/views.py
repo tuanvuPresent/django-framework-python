@@ -1,8 +1,13 @@
 import datetime
 from urllib.error import HTTPError
 
+from apps.auth.jwt.signals import user_login, user_logout
+from apps.auth.jwt.v1.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
+    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer
+from apps.common.custom_exception_handler import CustomAPIException
+from apps.common.custom_model_view_set import BaseGenericViewSet
+from apps.common.jwt_handle import JwtTokenGenerator
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.authentication import get_authorization_header
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
@@ -10,13 +15,6 @@ from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import MissingBackend, AuthTokenError
 from social_django.utils import load_strategy, load_backend
 
-from apps.auth.jwt.models import RevokedToken
-from apps.auth.jwt.v1.serializer import JWTLoginSerializer, JWTPasswordChangeSerializer, \
-    JWTPasswordResetSerializer, SocialLoginSerializer, JWTRefreshTokenSerializer, JWTAdminLoginSerializer
-from apps.common.jwt_handle import JwtTokenGenerator
-from apps.common.custom_exception_handler import CustomAPIException
-from apps.common.custom_model_view_set import BaseGenericViewSet
-from apps.auth.jwt.signals import user_login, user_logout
 
 class JWTAuthAPIView(BaseGenericViewSet):
     serializer_action_classes = {
@@ -108,7 +106,6 @@ class JWTAuthAPIView(BaseGenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data)
-
 
 
 class AuthSocialView(BaseGenericViewSet):

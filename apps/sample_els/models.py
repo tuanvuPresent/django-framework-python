@@ -1,5 +1,4 @@
 from django.db import models
-from apps.common.uuid_gen import uuid
 from apps.common.models import UuidModel
 
 

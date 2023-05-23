@@ -1,5 +1,5 @@
 from zipfile import BadZipFile
-
+import pandas as pd
 import openpyxl as openpyxl
 from apps.common.constant import ErrorMessage
 from apps.common.custom_exception_handler import CustomAPIException

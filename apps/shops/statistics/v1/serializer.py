@@ -1,7 +1,7 @@
-from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.conf import settings
 from apps.shops.models.orders import Order, Revenue
+from apps.shops.orders.v1.serializer import ListOrderSerializer
 
 
 class ListRevenueSerializer(serializers.ModelSerializer):

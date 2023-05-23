@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+
 class DynamicFieldsModelSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):

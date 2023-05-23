@@ -1,16 +1,11 @@
-from datetime import datetime
-
-from django.contrib.auth import authenticate
-from jwt import ExpiredSignatureError, DecodeError
-from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_jwt.settings import api_settings
-
 from apps.account.models import User
-from ..utils import CustomEmailVerifyTokenGenerator, CustomPasswordResetTokenGenerator
+from rest_framework import serializers
+
 from .tasks import send_mail_reset_password_v3
+from ..utils import CustomPasswordResetTokenGenerator
 from ....common.constant import ErrorMessage
 from ....common.custom_exception_handler import CustomAPIException
+
 
 class ResetPasswordSerializer3(serializers.Serializer):
     email = serializers.CharField(required=False, allow_blank=True)

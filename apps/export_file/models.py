@@ -2,6 +2,7 @@ from django.db import models
 from enum import Enum
 from apps.common.models import UuidModel
 
+
 class DownloadFileLog(UuidModel):
     class StatusType(Enum):
         IN_PROCESS = 0

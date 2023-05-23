@@ -40,7 +40,8 @@ class PayPalService:
     def create_order(self, purchase_units):
         headers = {
             'Content-Type': 'application/json',
-            'Authorization': f'Bearer {self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}',
+            'Authorization': f'Bearer '
+                             f'{self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}',
         }
         json_data = {
             "intent": "CAPTURE",
@@ -53,6 +54,7 @@ class PayPalService:
         url = f"{self.BASE_API_URL}/v2/checkout/orders/{order_id}/capture"
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}",
+            "Authorization": f"Bearer "
+                             f"{self.get_paypal_token(paypal_settings.CLIENT_ID, paypal_settings.CLIENT_SECRET)}"
         }
         return requests.post(url, headers=headers)

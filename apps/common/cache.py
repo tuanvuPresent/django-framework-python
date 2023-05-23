@@ -4,6 +4,7 @@ import functools
 
 def cache(timeout):
     memo = {}
+    
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args):
@@ -17,7 +18,6 @@ def cache(timeout):
 
     return decorator
 
-import time
 
 class Cache:
     def __init__(self):
@@ -43,5 +43,3 @@ class Cache:
 
     def size(self):
         return len(self.cache)
-    
-cache = Cache()

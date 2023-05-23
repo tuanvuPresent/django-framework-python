@@ -1,5 +1,4 @@
 from django.db import transaction
-from django.db.models import Prefetch
 from django.http import Http404
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
@@ -12,8 +11,10 @@ from rest_framework.response import Response
 from apps.common.custom_model_view_set import BaseModelViewSet, BaseGenericViewSet
 from apps.common.custom_permission import IsAdminUser, IsUser, IsAdminUserOrIsUserObjects
 from apps.common.serializer import DeleteSerialize
-from apps.e_learning.exams.serializer import *
+from apps.e_learning.exams.serializer import ListExamSerializer, CreateExamSerializer, DetailResultDoExamSerializer, \
+    DoExamSerializer, HistoryExamSerialize, ListDoExamSerializer
 from apps.e_learning.exams.utils import get_score
+from apps.e_learning.models.exam import Exams, HistoryExam
 
 
 @method_decorator(name='destroy', decorator=swagger_auto_schema(auto_schema=None))

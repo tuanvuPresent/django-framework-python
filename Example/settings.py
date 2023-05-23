@@ -369,7 +369,7 @@ CONSTANCE_CONFIG = {
     'NAME': ('', 'name', str),
 }
 
-ELASTICSEARCH_DSL={
+ELASTICSEARCH_DSL = {
     'default': {
         'hosts': 'elasticsearch://user:pass@localhost:9200'
     },
