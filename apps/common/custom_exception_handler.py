@@ -60,7 +60,25 @@ def get_errors_code(detail):
             return f'{key}_{get_errors_code(value)}'
     elif isinstance(detail, ErrorDetail):
         return detail.code
+    
 
+def get_messages(detail, prefix=""):
+    errors = {}
+    if isinstance(detail, list):
+        for i, item in enumerate(detail):
+            key = f"{prefix}[{i}]" if prefix else ''
+            errors.update(get_messages(item, prefix=key))
+    elif isinstance(detail, dict):
+        for key, value in detail.items():
+            new_prefix = f"{prefix}.{key}" if prefix else key
+            errors.update(get_messages(value, prefix=new_prefix))
+    else:
+        if prefix[-1] == ']':
+            prefix = prefix[:-3]
+        errors[prefix] = detail
+
+    return errors
+    
 
 def get_full_errors(detail):
     if isinstance(detail, list):
