@@ -32,8 +32,11 @@ def get_all_api():
         named_path_components = [component for component in endpoint[0].strip('/').split('/')
                                  if '{' not in component]
         action = endpoint[1].lower()
+        func_callback = endpoint[2].actions.get(action)
         data.append({
             'path': endpoint[0],
-            'name': ('_'.join(named_path_components[1:]) + '__' + action).replace('-', '_')
+            'name': ('_'.join(named_path_components[1:]) + '__' + action).replace('-', '_'),
+            'func_callback': func_callback,
+            'code': f'{endpoint[2].__name__.lower()}.{func_callback}',
         })
     return data
