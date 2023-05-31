@@ -1,4 +1,5 @@
 import hashlib
+import secrets
 from datetime import datetime
 
 from django.db import models
@@ -7,19 +8,18 @@ from rest_framework.permissions import BasePermission
 
 
 class APIKeyPermission(models.Model):
-    name = models.CharField(max_length=63, unique=True, default='')
-    scope = models.CharField(max_length=255)
-    prefix = models.CharField(max_length=8, unique=True, editable=False)
+    name = models.CharField(max_length=63, unique=True)
+    scope = models.CharField(max_length=63)
+    prefix = models.CharField(max_length=16, unique=True, editable=False)
     key = models.CharField(max_length=255, unique=True, editable=False)
     revoked = models.BooleanField(default=False)
     expiry_date = models.DateTimeField(blank=True, null=True)
 
     def gen_key(self):
-        prefix = get_random_string(8)
-        secret_key = get_random_string(32)
+        prefix = secrets.token_hex(8)
+        secret_key = secrets.token_hex(32)
         key = f'{prefix}.{secret_key}'.encode()
         hashed_key = hashlib.sha256(key).hexdigest()
-        print(key)
         return prefix, hashed_key
 
     def hash_key(self, key):
@@ -46,8 +46,7 @@ class CustomHasAPIKey(BasePermission):
         if api_key:
             try:
                 api_key_obj = APIKeyPermission.objects.get(prefix=api_key.split('.')[0])
-                # return api_key_obj.is_valid(api_key) and api_key_obj.scope == view.scope
-                return True
+                return api_key_obj.is_valid(api_key) and api_key_obj.scope == view.scope
             except APIKeyPermission.DoesNotExist:
                 return False
 
