@@ -1,12 +1,28 @@
+import re
 import time
 
 from django.conf import settings
 from django.contrib.admindocs.views import simplify_regex
-from django.core.cache import cache
 from redis.client import Redis
 from rest_framework.exceptions import Throttled
 
 redis_cache = Redis.from_url(settings.REDIS_CACHE)
+
+
+def path_pattern(request):
+    if request.resolver_match is None:
+        return None
+
+    PATH_PARAMETER_PATTERN = (
+        r"(?:[^/]*?)<(?:(?:.*?:))*?(\w+)>(?:(?:[^/]*?\[\^[^/]*/)?[^/]*)"
+    )
+    path_regex = re.compile(PATH_PARAMETER_PATTERN)
+    route = path_regex.sub(r"{\1}", request.resolver_match.route)
+    if route[:1] == "^":
+        route = route[1:]
+    if route[-1:] == "$":
+        route = route[:-1]
+    return f"/{route}"
 
 
 def rate_limit(max_requests, timeout):
