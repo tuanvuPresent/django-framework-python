@@ -3,7 +3,6 @@ import time
 from django.conf import settings
 from django.contrib.admindocs.views import simplify_regex
 from django.core.cache import cache
-from django.http import HttpResponseForbidden
 from redis.client import Redis
 from rest_framework.exceptions import Throttled
 
