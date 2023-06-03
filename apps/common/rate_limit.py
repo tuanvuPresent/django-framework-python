@@ -1,6 +1,9 @@
 import time
 
 from django.conf import settings
+from django.contrib.admindocs.views import simplify_regex
+from django.core.cache import cache
+from django.http import HttpResponseForbidden
 from redis.client import Redis
 from rest_framework.exceptions import Throttled
 
@@ -11,7 +14,7 @@ def rate_limit(max_requests, timeout):
     def decorator(view_func):
         def wrapped_view(request, *args, **kwargs):
             ident = request.user.id if request.user.is_authenticated else request.META.get('REMOTE_ADDR', '')
-            cache_key = f'rate_limit:{request.method}-{request.path}-{ident}'
+            cache_key = f'rate_limit:{request.method}-{simplify_regex(request.resolver_match.route)}-{ident}'
 
             current_time = time.time()
             redis_cache.zremrangebyscore(cache_key, 0, current_time - timeout)
