@@ -1,5 +1,6 @@
 import re
 import time
+import uuid
 
 from django.conf import settings
 from django.contrib.admindocs.views import simplify_regex
@@ -37,7 +38,7 @@ def rate_limit(max_requests, timeout):
             if request_count >= max_requests:
                 raise Throttled()
 
-            redis_cache.zadd(cache_key, {current_time: current_time})
+            redis_cache.zadd(cache_key, {uuid.uuid4(): current_time})
             redis_cache.expire(cache_key, timeout)
             return view_func(request, *args, **kwargs)
 
