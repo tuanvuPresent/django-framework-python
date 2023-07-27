@@ -1,4 +1,8 @@
 import logging.config
+import logging
+
+from pythonjsonlogger import jsonlogger
+
 
 logging.config.dictConfig({
     'version': 1,
@@ -24,3 +28,23 @@ logging.config.dictConfig({
     },
 })
 access_logger = logging.getLogger('access_log')
+
+
+class CustomJsonFormatter(jsonlogger.JsonFormatter):
+    def add_fields(self, log_record, record, message_dict):
+        log_record['level'] = record.levelname
+        log_record['name'] = record.name
+        super(CustomJsonFormatter, self).add_fields(log_record, record, message_dict)
+
+
+def get_logger(name, level=logging.DEBUG):
+    log_handler = logging.StreamHandler()
+    log_handler.setFormatter(CustomJsonFormatter())
+
+    _logger = logging.getLogger(name)
+    _logger.setLevel(level)
+    _logger.addHandler(log_handler)
+    return _logger
+
+debug_logger = get_logger('debug')
+debug_logger.info("info", extra={"special": "value", "run": 12})
