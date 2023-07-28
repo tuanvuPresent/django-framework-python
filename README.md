@@ -128,3 +128,45 @@ els.search(index=INDEX_ELS, **query)
 ```
 https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-weight-avg-aggregation.html
 ```
+
+## Mongodb
+- Install
+```
+pip install mongoengine==0.27.0
+```
+- Connect
+``` 
+connect(host=DATABASE_MONGO_URI)
+```
+- Document
+```python
+from mongoengine import Document, DynamicDocument
+from mongoengine import fields
+
+
+class Collection1(DynamicDocument):
+    content = fields.StringField()
+
+    meta = {
+        'collection': 'collection',
+    }
+
+# or
+class Collection2(Document):
+    content = fields.StringField()
+
+    meta = {
+        'collection': 'collection',
+        'strict': False,
+    }
+```
+- Query
+```python
+# GET
+query = Collection1.objects(content=?)
+# Create
+collection = Collection1(content=?)
+collection.save()
+# Count
+count = Collection1.objects(content=?).count()
+```
