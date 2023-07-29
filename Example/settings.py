@@ -3,6 +3,8 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from decouple import Config, RepositoryEnv, config
+from mongoengine import connect
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -381,3 +383,7 @@ if os.environ.get('SENTRY_DSN'):
         integrations=[DjangoIntegration()],
         traces_sample_rate=0.1,
     )
+
+# connect mongodb
+if os.environ.get("DATABASE_MONGO_URI"):
+    connect(host=os.environ.get("DATABASE_MONGO_URI"))
