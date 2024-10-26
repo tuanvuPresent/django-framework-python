@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.authentication import TokenAuthentication, get_authorization_header
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
-from Example.settings import EXPIRING_TOKEN_DURATION
+from django.conf import settings
 
 
 class ExpiringTokenAuthentication(TokenAuthentication):
@@ -41,4 +41,4 @@ class ExpiringTokenAuthentication(TokenAuthentication):
 
 
 def is_expired(token):
-    return timezone.now() - token.created - EXPIRING_TOKEN_DURATION > datetime.timedelta(seconds=0)
+    return timezone.now() - token.created - settings.EXPIRING_TOKEN_DURATION > datetime.timedelta(seconds=0)

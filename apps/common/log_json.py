@@ -46,5 +46,6 @@ def get_logger(name, level=logging.DEBUG):
     _logger.addHandler(log_handler)
     return _logger
 
+
 debug_logger = get_logger('debug')
 debug_logger.info("info", extra={"special": "value", "run": 12})

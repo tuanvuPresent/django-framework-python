@@ -2,12 +2,13 @@ import os
 
 from django.core.files.storage import FileSystemStorage
 from rest_framework.exceptions import NotFound
-
-from Example.settings import MEDIA_ROOT, MEDIA_URL
+from django.conf import settings
 
 
 def delete_file(name, url):
-    fs = FileSystemStorage(location=os.path.join(MEDIA_ROOT, url), base_url=os.path.join(MEDIA_URL, url))
+    fs = FileSystemStorage(
+        location=os.path.join(settings.MEDIA_ROOT, url), base_url=os.path.join(settings.MEDIA_URL, url)
+    )
 
     name = fs.path(name)
     try:
@@ -20,7 +21,9 @@ def delete_file(name, url):
 
 
 def add_file(file, url):
-    fs = FileSystemStorage(location=os.path.join(MEDIA_ROOT, url), base_url=os.path.join(MEDIA_URL, url))
+    fs = FileSystemStorage(
+        location=os.path.join(settings.MEDIA_ROOT, url), base_url=os.path.join(settings.MEDIA_URL, url)
+    )
     file_url = fs.save(file.name, file)
     file_url = fs.url(file_url)
     return file_url
