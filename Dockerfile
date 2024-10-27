@@ -1,13 +1,13 @@
-FROM python:3.8-slim
+FROM python:3.10-slim
 
 WORKDIR /usr/src/app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN pip install --upgrade pip==23.2.1 \
+RUN pip install --upgrade pip==24.0 \
    && pip install pipenv
-RUN apt update && apt install -y build-essential default-libmysqlclient-dev git
+RUN apt-get update && apt-get install python3-dev default-libmysqlclient-dev gcc -y
 
 COPY ./requirements.txt /usr/src/app/
 RUN pip install -r requirements.txt

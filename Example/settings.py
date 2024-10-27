@@ -2,17 +2,12 @@ import datetime
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from decouple import Config, RepositoryEnv, config
+from decouple import config
 from mongoengine import connect
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-if os.environ.get('SERVER_ENV', 'dev') == 'dev':
-    ENV_FILE = os.path.join(BASE_DIR, '.env.example')
-    env_config = Config(RepositoryEnv(ENV_FILE))
-else:
-    env_config = config
+env_config = config
 
 SECRET_KEY = env_config('SECRET_KEY')
 DEBUG = env_config("DEBUG", cast=bool)
@@ -25,15 +20,17 @@ INSTALLED_APPS = [
     'apps.common',
     'apps.e_learning',
     'apps.export_file',
+    'apps.fcm_notify',
     'apps.import_file',
     'apps.my_phone_verify',
     'apps.paypal',
     'apps.sample',
+    'apps.sample_els',
+    'apps.sendmail',
     'apps.shops',
     'apps.totp',
     'apps.upfile',
     'apps.webhook',
-    'apps.sample_els',
 
     'rest_pyotp',
     'rest_framework.authtoken',

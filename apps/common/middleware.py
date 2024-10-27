@@ -1,6 +1,6 @@
 import time
 
-from apps.core.log_json import access_logger
+from apps.common.log_json import access_logger
 
 
 class LogRequest:

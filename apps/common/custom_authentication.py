@@ -5,7 +5,6 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.settings import api_settings
 from apps.auth.jwt.cache import UserActivityStore
 from apps.account.models import User
-from apps.common.jwt_handle import JwtTokenGenerator
 
 
 class JWTAuthentication(JSONWebTokenAuthentication):
@@ -45,6 +44,7 @@ class JWTAuthentication(JSONWebTokenAuthentication):
         return self.authenticate_credentials(token)
 
     def authenticate_credentials(self, token):
+        from apps.common.jwt_handle import JwtTokenGenerator
         try:
             token_generator = JwtTokenGenerator()
             payload = token_generator.verify_token(token)
